@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Digital Tourism | منصة السياحة الرقمية</title>
+    <!-- Font Awesome Icons & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-card: rgba(30, 41, 59, 0.7);
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --accent-gold: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 90px;
+        }
+
+        /* Header Layout */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand i {
+            font-size: 1.5rem;
+            color: var(--accent-cyan);
+        }
+
+        .brand h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #06b6d4, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .lang-switch {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        /* Hero & Search Banner */
+        .hero {
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .hero h2 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            font-weight: 800;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            position: relative;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 45px 14px 16px;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .search-box i {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        /* Container Sections */
+        .container {
+            padding: 0 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 24px 0 14px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title i {
+            color: var(--accent-cyan);
+        }
+
+        /* AI Assistant Widget */
+        .ai-card {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(16, 185, 129, 0.15) 100%);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 20px;
+            padding: 18px;
+            backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-card h3 {
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ai-card p {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            margin-bottom: 14px;
+        }
+
+        .ai-input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .ai-input-group input {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            background: rgba(15, 23, 42, 0.6);
+            color: #fff;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .ai-input-group button {
+            background: var(--accent-cyan);
+            color: #0f172a;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* Grid Utilities & Modules */
+        .grid-modules {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .module-card {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: transform 0.2s;
+        }
+
+        .module-card:active {
+            transform: scale(0.98);
+        }
+
+        .module-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--accent-cyan);
+        }
+
+        .module-card h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .module-card span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Currency & Calculator Box */
+        .calc-card {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 18px;
+            margin-top: 12px;
+        }
+
+        .calc-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .calc-input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            color: #fff;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 65px;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.75rem;
+        }
+
+        .nav-item.active {
+            color: var(--accent-cyan);
+        }
+
+        .nav-item i {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="brand">
+            <i class="fa-solid => fa-compass-drafting"></i>
+            <i class="fa-solid fa-earth-africa"></i>
+            <h1>Global Tourism</h1>
+        </div>
+        <select class="lang-switch" id="langSelect">
+            <option value="ar">🇩🇿 العربية</option>
+            <option value="en">🇬🇧 English</option>
+            <option value="fr">🇫🇷 Français</option>
+        </select>
+    </header>
+
+    <!-- Hero Area -->
+    <section class="hero">
+        <h2>اكتشف الجزائر بذكاء 🇩🇿</h2>
+        <p>دليلك الذكي، تحويل العملات، وحاسبة رحلتك في منصة واحدة</p>
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="ابحث عن وجهة، فندق، أو معلم سياحي...">
+        </div>
+    </section>
+
+    <div class="container">
+        
+        <!-- AI Assistant Section -->
+        <div class="ai-card">
+            <h3><i class="fa-solid fa-robot" style="color: var(--accent-cyan);"></i> المرشد السياحي الذكي (AI Guide)</h3>
+            <p>اسأل الذكاء الاصطناعي عن أفضل المسارات السياحية، الأسعار، والمصاعب للنقل.</p>
+            <div class="ai-input-group">
+                <input type="text" id="aiQuery" placeholder="مثال: اقتراح برنامج يومين في وهران؟">
+                <button onclick="askAI()">اسأل</button>
+            </div>
+            <div id="aiResponse" style="margin-top: 10px; font-size: 0.85rem; display: none; color: #4ade80;"></div>
+        </div>
+
+        <!-- Services Matrix -->
+        <div class="section-title">
+            <i class="fa-solid fa-grid-2"></i> الخدمات الرئيسية
+        </div>
+
+        <div class="grid-modules">
+            <div class="module-card">
+                <div class="module-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                <h4>المعالم السياحية</h4>
+                <span>استكشف الآثار والشواطئ</span>
+            </div>
+            <div class="module-card">
+                <div class="module-icon"><i class="fa-solid fa-hotel"></i></div>
+                <h4>الفنادق والإقامة</h4>
+                <span>أفضل خيارات الحجز</span>
+            </div>
+            <div class="module-card">
+                <div class="module-icon"><i class="fa-solid fa-utensils"></i></div>
+                <h4>المطاعم المحلية</h4>
+                <span>تذوق الأطباق التقليدية</span>
+            </div>
+            <div class="module-card">
+                <div class="module-icon"><i class="fa-solid fa-taxi"></i></div>
+                <h4>النقل والمواصلات</h4>
+                <span>خيارات التنقل السهل</span>
+            </div>
+        </div>
+
+        <!-- Financial & Exchange Helper -->
+        <div class="section-title">
+            <i class="fa-solid fa-coins"></i> خدمات الصرف والميزانية
+        </div>
+
+        <div class="calc-card">
+            <h4><i class="fa-solid fa-arrow-right-arrow-left" style="color: var(--accent-gold);"></i> محول العملات (EUR/USD → DZD)</h4>
+            <div class="calc-row">
+                <input type="number" id="foreignAmount" class="calc-input" value="100" placeholder="المبلغ">
+                <select id="currencyType" class="calc-input">
+                    <option value="EUR">EUR (€)</option>
+                    <option value="USD">USD ($)</option>
+                    <option value="GBP">GBP (£)</option>
+                </select>
+            </div>
+            <div class="calc-row" style="margin-top: 8px;">
+                <button onclick="convertCurrency()" style="width: 100%; padding: 10px; background: var(--accent-gold); border: none; border-radius: 10px; font-weight: bold; color: #0f172a;">حساب المعادل بالدينار (DZD)</button>
+            </div>
+            <div id="calcResult" style="text-align: center; margin-top: 12px; font-weight: 700; color: var(--accent-cyan);"></div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <i class="fa-solid fa-house"></i>
+            <span>الرئيسية</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-compass"></i>
+            <span>استكشف</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-calculator"></i>
+            <span>الميزانية</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-user"></i>
+            <span>حسابي</span>
+        </a>
+    </nav>
+
+    <script>
+        function askAI() {
+            const query = document.getElementById('aiQuery').value;
+            const res = document.getElementById('aiResponse');
+            if(!query) return;
+            res.style.display = 'block';
+            res.innerText = "🤖 الذكاء الاصطناعي يُعالج طلبك... (سيتم ربط الخدمة بالمحرك البرمجي)";
+        }
+
+        function convertCurrency() {
+            const amount = parseFloat(document.getElementById('foreignAmount').value) || 0;
+            const type = document.getElementById('currencyType').value;
+            let rate = 240; // تقديري EUR/DZD
+            if (type === 'USD') rate = 220;
+            if (type === 'GBP') rate = 270;
+
+            const total = amount * rate;
+            document.getElementById('calcResult').innerText = `${amount} ${type} ≈ ${total.toLocaleString()} DZD`;
+        }
+    </script>
+</body>
+</html>
