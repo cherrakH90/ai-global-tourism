@@ -10,11 +10,13 @@
     
     <style>
         :root {
-            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
-            --glass-bg: rgba(255, 255, 255, 0.05);
+            --bg-gradient: radial-gradient(circle at top right, #1e1b4b 0%, #0f172a 60%, #020617 100%);
+            --glass-bg: rgba(255, 255, 255, 0.04);
             --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-card: rgba(30, 41, 59, 0.7);
+            --glass-card: rgba(30, 41, 59, 0.65);
+            --glass-modal: rgba(15, 23, 42, 0.85);
             --accent-cyan: #06b6d4;
+            --accent-cyan-glow: rgba(6, 182, 212, 0.4);
             --accent-emerald: #10b981;
             --accent-gold: #f59e0b;
             --text-main: #f8fafc;
@@ -34,6 +36,34 @@
             color: var(--text-main);
             min-height: 100vh;
             padding-bottom: 90px;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Glow Background Effects */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -10%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(6, 182, 212, 0.15);
+            filter: blur(120px);
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: 10%;
+            right: -10%;
+            width: 350px;
+            height: 350px;
+            background: rgba(16, 185, 129, 0.12);
+            filter: blur(140px);
+            border-radius: 50%;
+            z-index: -1;
         }
 
         /* Header Layout */
@@ -41,14 +71,15 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--glass-border);
-            padding: 12px 20px;
+            padding: 14px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
         }
 
         .brand {
@@ -60,42 +91,46 @@
         .brand i {
             font-size: 1.5rem;
             color: var(--accent-cyan);
+            filter: drop-shadow(0 0 8px var(--accent-cyan-glow));
         }
 
         .brand h1 {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             font-weight: 800;
             background: linear-gradient(90deg, #06b6d4, #10b981);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
         }
 
         .lang-switch {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             color: var(--text-main);
-            padding: 6px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
             font-size: 0.85rem;
             outline: none;
+            backdrop-filter: blur(10px);
         }
 
         /* Hero & Search Banner */
         .hero {
-            padding: 24px 20px;
+            padding: 28px 20px 20px 20px;
             text-align: center;
         }
 
         .hero h2 {
-            font-size: 1.6rem;
-            margin-bottom: 8px;
+            font-size: 1.7rem;
+            margin-bottom: 6px;
             font-weight: 800;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
         .hero p {
             color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 20px;
+            font-size: 0.88rem;
+            margin-bottom: 22px;
         }
 
         .search-box {
@@ -106,19 +141,27 @@
 
         .search-box input {
             width: 100%;
-            padding: 14px 45px 14px 16px;
+            padding: 14px 48px 14px 18px;
             border-radius: 16px;
             border: 1px solid var(--glass-border);
             background: var(--glass-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             color: #fff;
             font-size: 0.95rem;
             outline: none;
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px var(--accent-cyan-glow);
         }
 
         .search-box i {
             position: absolute;
-            right: 16px;
+            right: 18px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
@@ -134,7 +177,7 @@
         .section-title {
             font-size: 1.1rem;
             font-weight: 700;
-            margin: 24px 0 14px 0;
+            margin: 26px 0 14px 0;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -146,13 +189,13 @@
 
         /* AI Assistant Widget */
         .ai-card {
-            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(16, 185, 129, 0.15) 100%);
-            border: 1px solid rgba(6, 182, 212, 0.3);
-            border-radius: 20px;
-            padding: 18px;
-            backdrop-filter: blur(12px);
-            position: relative;
-            overflow: hidden;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(16, 185, 129, 0.08) 100%);
+            border: 1px solid rgba(6, 182, 212, 0.25);
+            border-radius: 22px;
+            padding: 20px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
         }
 
         .ai-card h3 {
@@ -176,8 +219,8 @@
 
         .ai-input-group input {
             flex: 1;
-            padding: 10px 14px;
-            border-radius: 12px;
+            padding: 12px 14px;
+            border-radius: 14px;
             border: 1px solid var(--glass-border);
             background: rgba(15, 23, 42, 0.6);
             color: #fff;
@@ -186,53 +229,79 @@
         }
 
         .ai-input-group button {
-            background: var(--accent-cyan);
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
             color: #0f172a;
             border: none;
-            padding: 10px 18px;
-            border-radius: 12px;
+            padding: 12px 18px;
+            border-radius: 14px;
             font-weight: 700;
             cursor: pointer;
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+            transition: transform 0.2s;
         }
 
-        /* Grid Utilities & Modules */
+        .ai-input-group button:active {
+            transform: scale(0.95);
+        }
+
+        /* Grid Modules (HD Glassmorphism Cards) */
         .grid-modules {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            gap: 14px;
         }
 
         .module-card {
             background: var(--glass-card);
             border: 1px solid var(--glass-border);
-            border-radius: 18px;
-            padding: 16px;
+            border-radius: 20px;
+            padding: 18px;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            transition: transform 0.2s;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+            transition: 0.5s;
+        }
+
+        .module-card:active::before {
+            left: 100%;
         }
 
         .module-card:active {
-            transform: scale(0.98);
+            transform: scale(0.96);
+            border-color: var(--accent-cyan);
         }
 
         .module-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.08);
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             color: var(--accent-cyan);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
         .module-card h4 {
             font-size: 0.95rem;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .module-card span {
@@ -240,41 +309,142 @@
             color: var(--text-muted);
         }
 
-        /* Currency & Calculator Box */
+        /* Currency Calculator Box */
         .calc-card {
             background: var(--glass-card);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 18px;
+            border-radius: 22px;
+            padding: 20px;
             margin-top: 12px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
 
         .calc-row {
             display: flex;
             gap: 10px;
-            margin-top: 10px;
+            margin-top: 12px;
         }
 
         .calc-input {
             flex: 1;
-            padding: 10px;
-            border-radius: 10px;
+            padding: 12px;
+            border-radius: 12px;
             border: 1px solid var(--glass-border);
-            background: var(--glass-bg);
+            background: rgba(15, 23, 42, 0.5);
             color: #fff;
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             outline: none;
+        }
+
+        /* Glassmorphism Dynamic Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(2, 6, 23, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 2000;
+            display: flex;
+            align-items: flex-end; /* Mobile Bottom Sheet Style */
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: var(--glass-modal);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid rgba(255,255,255,0.2);
+            width: 100%;
+            max-width: 600px;
+            border-radius: 28px 28px 0 0;
+            padding: 24px 20px 35px 20px;
+            transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .modal-header h3 {
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent-cyan);
+        }
+
+        .modal-close {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .modal-item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .modal-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 14px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .modal-item i {
+            font-size: 1.4rem;
+            color: var(--accent-emerald);
+        }
+
+        .modal-item-info h5 {
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+        }
+
+        .modal-item-info p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
         }
 
         /* Bottom Navigation Bar */
         .bottom-nav {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            bottom: 0; left: 0; right: 0;
             height: 65px;
-            background: rgba(15, 23, 42, 0.92);
+            background: rgba(15, 23, 42, 0.88);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-top: 1px solid var(--glass-border);
@@ -296,10 +466,11 @@
 
         .nav-item.active {
             color: var(--accent-cyan);
+            font-weight: 700;
         }
 
         .nav-item i {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
         }
     </style>
 </head>
@@ -338,7 +509,7 @@
                 <input type="text" id="aiQuery" placeholder="مثال: برنامج 3 أيام في صحراء التاسيلي؟">
                 <button onclick="askAI()">اسأل AI</button>
             </div>
-            <div id="aiResponse" style="margin-top: 10px; font-size: 0.85rem; display: none; color: #4ade80;"></div>
+            <div id="aiResponse" style="margin-top: 12px; font-size: 0.88rem; display: none; color: #4ade80; background: rgba(16, 185, 129, 0.1); padding: 12px; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.2);"></div>
         </div>
 
         <!-- Services Matrix -->
@@ -347,22 +518,22 @@
         </div>
 
         <div class="grid-modules">
-            <div class="module-card">
+            <div class="module-card" onclick="openModal('gps')">
                 <div class="module-icon"><i class="fa-solid fa-map-location-dot"></i></div>
                 <h4>المعالم والـ GPS</h4>
                 <span>اكتشاف الأماكن القريبة</span>
             </div>
-            <div class="module-card">
+            <div class="module-card" onclick="openModal('hotels')">
                 <div class="module-icon"><i class="fa-solid fa-hotel"></i></div>
                 <h4>الفنادق والإقامة</h4>
                 <span>خيارات حجز مخصصة</span>
             </div>
-            <div class="module-card">
+            <div class="module-card" onclick="openModal('food')">
                 <div class="module-icon"><i class="fa-solid fa-utensils"></i></div>
                 <h4>المطاعم المحلية</h4>
                 <span>تذوق وتجارب مميزة</span>
             </div>
-            <div class="module-card">
+            <div class="module-card" onclick="openModal('transport')">
                 <div class="module-icon"><i class="fa-solid fa-taxi"></i></div>
                 <h4>النقل والتنقل</h4>
                 <span>حافلات، سيارات، وتكاسي</span>
@@ -384,12 +555,25 @@
                     <option value="GBP">GBP (£)</option>
                 </select>
             </div>
-            <div class="calc-row" style="margin-top: 8px;">
-                <button onclick="convertCurrency()" style="width: 100%; padding: 10px; background: var(--accent-gold); border: none; border-radius: 10px; font-weight: bold; color: #0f172a; cursor: pointer;">حساب المعادل بالدينار (DZD)</button>
+            <div class="calc-row" style="margin-top: 10px;">
+                <button onclick="convertCurrency()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border: none; border-radius: 12px; font-weight: bold; color: #0f172a; cursor: pointer; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.25);">حساب المعادل بالدينار (DZD)</button>
             </div>
-            <div id="calcResult" style="text-align: center; margin-top: 12px; font-weight: 700; color: var(--accent-cyan);"></div>
+            <div id="calcResult" style="text-align: center; margin-top: 14px; font-weight: 700; color: var(--accent-cyan); font-size: 1.05rem;"></div>
         </div>
 
+    </div>
+
+    <!-- Glassmorphism Dynamic Modal Overlay -->
+    <div class="modal-overlay" id="serviceModal" onclick="closeModalOnOuter(event)">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle"><i class="fa-solid fa-star"></i> تفاصيل الخدمة</h3>
+                <div class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></div>
+            </div>
+            <div class="modal-item-list" id="modalBody">
+                <!-- Dynamic Items Inserted via JS -->
+            </div>
+        </div>
     </div>
 
     <!-- Bottom Navigation -->
@@ -413,6 +597,70 @@
     </nav>
 
     <script>
+        // Modal Data Mapping
+        const serviceData = {
+            gps: {
+                title: '<i class="fa-solid fa-map-location-dot"></i> المعالم والمواقع القريبة',
+                items: [
+                    { title: 'مقام الشهيد & حديقة الحامة', desc: 'الجزائر العاصمة — موقع تاريخي وطبيعي خلاب', icon: 'fa-monument' },
+                    { title: 'صحراء التاسيلي وقصر غرداية', desc: 'جنوب الجزائر — موروث عالمي لليونسكو', icon: 'fa-mountain-sun' },
+                    { title: 'آثار تيبازة الرومانية', desc: 'تيبازة — إطلالة بحرية وآثار تاريخية مجتمعة', icon: 'fa-landmark' }
+                ]
+            },
+            hotels: {
+                title: '<i class="fa-solid fa-hotel"></i> الإقامة والفنادق الموصى بها',
+                items: [
+                    { title: 'فندق الأوراسي (El Aurassi)', desc: 'الجزائر العاصمة — إطلالة بانورامية على البحر', icon: 'fa-star' },
+                    { title: 'فندق الشيراتون (Sheraton)', desc: 'وهران / العاصمة — خدمات فندقية راقية 5 نجوم', icon: 'fa-bed' },
+                    { title: 'منتجعات ورقلة وتيميمون', desc: 'إقامة صحراوية تقليدية فاخرة', icon: 'fa-caravan' }
+                ]
+            },
+            food: {
+                title: '<i class="fa-solid fa-utensils"></i> المطاعم والمأكولات المحلية',
+                items: [
+                    { title: 'مطاعم القصبة العتيقة', desc: 'أطباق تقليدية: الكسكسي، الشوربة البيضاء، والمثوم', icon: 'fa-bowl-food' },
+                    { title: 'مطاعم سمك ميناء الجزاير وجميلة', desc: 'أجود المأكولات البحرية الطازجة', icon: 'fa-fish' }
+                ]
+            },
+            transport: {
+                title: '<i class="fa-solid fa-taxi"></i> خدمات النقل الذكية',
+                items: [
+                    { title: 'حجز سيارات السياحة والـ VIP', desc: 'تنقلات خاصة مع سائق بين الولايات', icon: 'fa-car' },
+                    { title: 'مترو وترامواي الجزائر', desc: 'شبكة نقل حديثة داخل المدن الكبرى', icon: 'fa-train' }
+                ]
+            }
+        };
+
+        function openModal(type) {
+            const data = serviceData[type];
+            if(!data) return;
+
+            document.getElementById('modalTitle').innerHTML = data.title;
+            const modalBody = document.getElementById('modalBody');
+            
+            modalBody.innerHTML = data.items.map(item => `
+                <div class="modal-item">
+                    <i class="fa-solid ${item.icon}"></i>
+                    <div class="modal-item-info">
+                        <h5>${item.title}</h5>
+                        <p>${item.desc}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('serviceModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('serviceModal').classList.remove('active');
+        }
+
+        function closeModalOnOuter(e) {
+            if(e.target.classList.contains('modal-overlay')) {
+                closeModal();
+            }
+        }
+
         function askAI() {
             const query = document.getElementById('aiQuery').value;
             const res = document.getElementById('aiResponse');
