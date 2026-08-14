@@ -14,7 +14,7 @@
             --glass-bg: rgba(255, 255, 255, 0.04);
             --glass-border: rgba(255, 255, 255, 0.12);
             --glass-card: rgba(30, 41, 59, 0.65);
-            --glass-modal: rgba(15, 23, 42, 0.85);
+            --glass-modal: rgba(15, 23, 42, 0.88);
             --accent-cyan: #06b6d4;
             --accent-cyan-glow: rgba(6, 182, 212, 0.4);
             --accent-emerald: #10b981;
@@ -39,14 +39,12 @@
             overflow-x: hidden;
         }
 
-        /* Ambient Glow Background Effects */
+        /* Background Glows */
         body::before {
             content: '';
             position: fixed;
-            top: -10%;
-            left: -10%;
-            width: 300px;
-            height: 300px;
+            top: -10%; left: -10%;
+            width: 300px; height: 300px;
             background: rgba(6, 182, 212, 0.15);
             filter: blur(120px);
             border-radius: 50%;
@@ -56,10 +54,8 @@
         body::after {
             content: '';
             position: fixed;
-            bottom: 10%;
-            right: -10%;
-            width: 350px;
-            height: 350px;
+            bottom: 10%; right: -10%;
+            width: 350px; height: 350px;
             background: rgba(16, 185, 129, 0.12);
             filter: blur(140px);
             border-radius: 50%;
@@ -79,7 +75,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
         }
 
         .brand {
@@ -100,7 +95,6 @@
             background: linear-gradient(90deg, #06b6d4, #10b981);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 0.5px;
         }
 
         .lang-switch {
@@ -111,60 +105,24 @@
             border-radius: 20px;
             font-size: 0.85rem;
             outline: none;
-            backdrop-filter: blur(10px);
         }
 
-        /* Hero & Search Banner */
+        /* Hero */
         .hero {
-            padding: 28px 20px 20px 20px;
+            padding: 24px 20px 16px 20px;
             text-align: center;
         }
 
         .hero h2 {
-            font-size: 1.7rem;
+            font-size: 1.6rem;
             margin-bottom: 6px;
             font-weight: 800;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
         .hero p {
             color: var(--text-muted);
             font-size: 0.88rem;
-            margin-bottom: 22px;
-        }
-
-        .search-box {
-            position: relative;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 14px 48px 14px 18px;
-            border-radius: 16px;
-            border: 1px solid var(--glass-border);
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            color: #fff;
-            font-size: 0.95rem;
-            outline: none;
-            box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
-            transition: all 0.3s ease;
-        }
-
-        .search-box input:focus {
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 15px var(--accent-cyan-glow);
-        }
-
-        .search-box i {
-            position: absolute;
-            right: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
+            margin-bottom: 18px;
         }
 
         /* Container Sections */
@@ -175,9 +133,9 @@
         }
 
         .section-title {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 700;
-            margin: 26px 0 14px 0;
+            margin: 22px 0 12px 0;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -187,39 +145,66 @@
             color: var(--accent-cyan);
         }
 
-        /* AI Assistant Widget */
-        .ai-card {
-            background: linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(16, 185, 129, 0.08) 100%);
-            border: 1px solid rgba(6, 182, 212, 0.25);
+        /* AI Speaking Robot Card */
+        .ai-robot-card {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(16, 185, 129, 0.1) 100%);
+            border: 1px solid rgba(6, 182, 212, 0.3);
             border-radius: 22px;
             padding: 20px;
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
+            position: relative;
         }
 
-        .ai-card h3 {
-            font-size: 1.05rem;
-            margin-bottom: 6px;
+        .robot-header {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
+            margin-bottom: 12px;
         }
 
-        .ai-card p {
-            font-size: 0.85rem;
-            color: #cbd5e1;
-            margin-bottom: 14px;
+        .robot-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(6, 182, 212, 0.2);
+            border: 1px solid var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--accent-cyan);
+            position: relative;
+        }
+
+        .robot-avatar.speaking {
+            animation: pulse-glow 1.2s infinite alternate;
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 5px var(--accent-cyan); }
+            100% { box-shadow: 0 0 22px var(--accent-cyan); }
+        }
+
+        .robot-info h3 {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .robot-info p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
         }
 
         .ai-input-group {
             display: flex;
             gap: 8px;
+            margin-top: 10px;
         }
 
         .ai-input-group input {
             flex: 1;
-            padding: 12px 14px;
+            padding: 12px;
             border-radius: 14px;
             border: 1px solid var(--glass-border);
             background: rgba(15, 23, 42, 0.6);
@@ -232,123 +217,158 @@
             background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
             color: #0f172a;
             border: none;
-            padding: 12px 18px;
+            padding: 12px 16px;
             border-radius: 14px;
             font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
-            transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .ai-input-group button:active {
-            transform: scale(0.95);
+        .voice-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
         }
 
-        /* Grid Modules (HD Glassmorphism Cards) */
+        .btn-voice {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-voice.active {
+            border-color: var(--accent-emerald);
+            color: var(--accent-emerald);
+        }
+
+        /* 3D Glassmorphism Google Map Container */
+        .map-wrapper {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 22px;
+            padding: 12px;
+            backdrop-filter: blur(16px);
+            position: relative;
+            margin-top: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .map-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 0 4px;
+        }
+
+        .map-mode-btn {
+            background: rgba(6, 182, 212, 0.15);
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .map-frame-3d {
+            width: 100%;
+            height: 250px;
+            border-radius: 16px;
+            border: none;
+            filter: contrast(1.05) saturate(1.1);
+            transform: perspective(600px) rotateX(4deg);
+            transition: transform 0.4s ease;
+        }
+
+        .map-frame-3d:hover {
+            transform: perspective(600px) rotateX(0deg);
+        }
+
+        /* Grid Services */
         .grid-modules {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
+            gap: 12px;
         }
 
         .module-card {
             background: var(--glass-card);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
-            padding: 18px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .module-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
-            transition: 0.5s;
-        }
-
-        .module-card:active::before {
-            left: 100%;
+            transition: transform 0.2s;
         }
 
         .module-card:active {
             transform: scale(0.96);
-            border-color: var(--accent-cyan);
         }
 
         .module-icon {
-            width: 46px;
-            height: 46px;
-            border-radius: 14px;
+            width: 42px; height: 42px;
+            border-radius: 12px;
             background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             color: var(--accent-cyan);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
-        .module-card h4 {
-            font-size: 0.95rem;
-            font-weight: 700;
-        }
+        .module-card h4 { font-size: 0.92rem; }
+        .module-card span { font-size: 0.75rem; color: var(--text-muted); }
 
-        .module-card span {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        /* Currency Calculator Box */
+        /* Currency Box */
         .calc-card {
             background: var(--glass-card);
             border: 1px solid var(--glass-border);
-            border-radius: 22px;
-            padding: 20px;
-            margin-top: 12px;
+            border-radius: 20px;
+            padding: 18px;
+            margin-top: 10px;
             backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
         }
 
         .calc-row {
             display: flex;
             gap: 10px;
-            margin-top: 12px;
+            margin-top: 10px;
         }
 
         .calc-input {
             flex: 1;
-            padding: 12px;
-            border-radius: 12px;
+            padding: 10px;
+            border-radius: 10px;
             border: 1px solid var(--glass-border);
             background: rgba(15, 23, 42, 0.5);
             color: #fff;
             text-align: center;
-            font-size: 0.95rem;
             outline: none;
         }
 
-        /* Glassmorphism Dynamic Modal */
+        /* Modal Overlay */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(2, 6, 23, 0.75);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(2, 6, 23, 0.78);
+            backdrop-filter: blur(14px);
             z-index: 2000;
             display: flex;
-            align-items: flex-end; /* Mobile Bottom Sheet Style */
-            justify-content: center;
+            align-items: flex-end;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s ease;
@@ -362,16 +382,13 @@
         .modal-content {
             background: var(--glass-modal);
             border: 1px solid var(--glass-border);
-            border-top: 1px solid rgba(255,255,255,0.2);
             width: 100%;
             max-width: 600px;
+            margin: 0 auto;
             border-radius: 28px 28px 0 0;
-            padding: 24px 20px 35px 20px;
+            padding: 22px 20px 30px 20px;
             transform: translateY(100%);
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+            transition: transform 0.35s ease;
         }
 
         .modal-overlay.active .modal-content {
@@ -382,71 +399,26 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 18px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        .modal-header h3 {
-            font-size: 1.15rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--accent-cyan);
+            margin-bottom: 16px;
         }
 
         .modal-close {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             color: var(--text-muted);
-            width: 32px;
-            height: 32px;
+            width: 32px; height: 32px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             cursor: pointer;
         }
 
-        .modal-item-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .modal-item {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            padding: 14px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .modal-item i {
-            font-size: 1.4rem;
-            color: var(--accent-emerald);
-        }
-
-        .modal-item-info h5 {
-            font-size: 0.95rem;
-            margin-bottom: 2px;
-        }
-
-        .modal-item-info p {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-        }
-
-        /* Bottom Navigation Bar */
+        /* Bottom Nav */
         .bottom-nav {
             position: fixed;
             bottom: 0; left: 0; right: 0;
             height: 65px;
-            background: rgba(15, 23, 42, 0.88);
+            background: rgba(15, 23, 42, 0.9);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             border-top: 1px solid var(--glass-border);
             display: flex;
             justify-content: space-around;
@@ -466,11 +438,7 @@
 
         .nav-item.active {
             color: var(--accent-cyan);
-            font-weight: 700;
-        }
-
-        .nav-item i {
-            font-size: 1.25rem;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -482,173 +450,277 @@
             <i class="fa-solid fa-earth-africa"></i>
             <h1>AI GLOBAL TOURISM</h1>
         </div>
-        <select class="lang-switch" id="langSelect">
+        <select class="lang-switch" id="langSelect" onchange="switchLanguage()">
             <option value="ar">🇩🇿 العربية</option>
             <option value="en">🇬🇧 English</option>
-            <option value="fr">🇫🇷 Français</option>
         </select>
     </header>
 
-    <!-- Hero Area -->
+    <!-- Hero -->
     <section class="hero">
-        <h2>استكشف العالم بذكاء 🌍</h2>
-        <p>الوجهة الأولى: الجزائر 🇩🇿 — مرشد AI، محول العملات، وحاسبة ميزانية الرحلة</p>
-        <div class="search-box">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="ابحث عن وجهة، فندق، أو معلم سياحي...">
-        </div>
+        <h2 id="heroTitle">استكشف العالم بذكاء 🌍</h2>
+        <p id="heroSub">المرشد الصوتي المتكلم 3D وخرائط الذكاء الاصطناعي</p>
     </section>
 
     <div class="container">
         
-        <!-- AI Assistant Section -->
-        <div class="ai-card">
-            <h3><i class="fa-solid fa-robot" style="color: var(--accent-cyan);"></i> المرشد السياحي الذكي (AI Guide)</h3>
-            <p>خطط لرحلتك، اكتشف المسارات المحلية، واحصل على توصيات فورية بالذكاء الاصطناعي.</p>
-            <div class="ai-input-group">
-                <input type="text" id="aiQuery" placeholder="مثال: برنامج 3 أيام في صحراء التاسيلي؟">
-                <button onclick="askAI()">اسأل AI</button>
+        <!-- Speaking AI Robot Widget -->
+        <div class="ai-robot-card">
+            <div class="robot-header">
+                <div class="robot-avatar" id="robotAvatar">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="robot-info">
+                    <h3 id="robotName">الروبوت الذكي المساعد (Voice AI)</h3>
+                    <p id="robotStatus">جاهز للتحدث والاستماع باللغتين 🇩🇿 🇬🇧</p>
+                </div>
             </div>
+
+            <div class="ai-input-group">
+                <input type="text" id="aiQuery" placeholder="اسأل عن وجهة: مثال: مقام الشهيد، التاسيلي...">
+                <button onclick="askAIAndSpeak()">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>إرسال</span>
+                </button>
+            </div>
+
+            <div class="voice-controls">
+                <button class="btn-voice active" id="speechToggle" onclick="toggleSpeech()">
+                    <i class="fa-solid fa-volume-high"></i> <span id="voiceLabel">الصوت التفاعلي: مفعل</span>
+                </button>
+                <button class="btn-voice" onclick="stopSpeech()">
+                    <i class="fa-solid fa-circle-stop"></i> إيقاف الصوت
+                </button>
+            </div>
+
             <div id="aiResponse" style="margin-top: 12px; font-size: 0.88rem; display: none; color: #4ade80; background: rgba(16, 185, 129, 0.1); padding: 12px; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.2);"></div>
+        </div>
+
+        <!-- 3D Google Maps AI View -->
+        <div class="section-title">
+            <i class="fa-solid fa-cubes"></i> الخريطة الذكية ثلاثية الأبعاد (AI 3D Map)
+        </div>
+
+        <div class="map-wrapper">
+            <div class="map-controls">
+                <span style="font-size: 0.8rem; color: var(--text-muted);" id="mapLocationLabel">الجزائر العاصمة 3D View</span>
+                <button class="map-mode-btn" onclick="toggleMapMode()" id="btnMapMode">وضع الساتلايت 3D</button>
+            </div>
+            <iframe 
+                id="gmapFrame" 
+                class="map-frame-3d" 
+                src="https://maps.google.com/maps?q=Algiers,Algeria&t=k&z=15&ie=UTF8&iwloc=&output=embed" 
+                allowfullscreen="" 
+                loading="lazy">
+            </iframe>
         </div>
 
         <!-- Services Matrix -->
         <div class="section-title">
-            <i class="fa-solid fa-border-all"></i> الخدمات الرقمية الذكية
+            <i class="fa-solid fa-border-all"></i> الخدمات الرقمية التفاعلية
         </div>
 
         <div class="grid-modules">
             <div class="module-card" onclick="openModal('gps')">
                 <div class="module-icon"><i class="fa-solid fa-map-location-dot"></i></div>
-                <h4>المعالم والـ GPS</h4>
-                <span>اكتشاف الأماكن القريبة</span>
+                <h4 id="m1">المعالم والـ GPS</h4>
+                <span>تحديد الموقع التلقائي</span>
             </div>
             <div class="module-card" onclick="openModal('hotels')">
                 <div class="module-icon"><i class="fa-solid fa-hotel"></i></div>
-                <h4>الفنادق والإقامة</h4>
+                <h4 id="m2">الفنادق والإقامة</h4>
                 <span>خيارات حجز مخصصة</span>
             </div>
             <div class="module-card" onclick="openModal('food')">
                 <div class="module-icon"><i class="fa-solid fa-utensils"></i></div>
-                <h4>المطاعم المحلية</h4>
+                <h4 id="m3">المطاعم المحلية</h4>
                 <span>تذوق وتجارب مميزة</span>
             </div>
             <div class="module-card" onclick="openModal('transport')">
                 <div class="module-icon"><i class="fa-solid fa-taxi"></i></div>
-                <h4>النقل والتنقل</h4>
+                <h4 id="m4">النقل والتنقل</h4>
                 <span>حافلات، سيارات، وتكاسي</span>
             </div>
         </div>
 
-        <!-- Financial & Exchange Helper -->
+        <!-- Financial Converter -->
         <div class="section-title">
             <i class="fa-solid fa-coins"></i> إدارة الميزانية والعملات
         </div>
 
         <div class="calc-card">
-            <h4><i class="fa-solid fa-arrow-right-arrow-left" style="color: var(--accent-gold);"></i> محول العملات الذكي (EUR/USD → DZD)</h4>
+            <h4><i class="fa-solid fa-arrow-right-arrow-left" style="color: var(--accent-gold);"></i> محول العملات الذكي</h4>
             <div class="calc-row">
-                <input type="number" id="foreignAmount" class="calc-input" value="100" placeholder="المبلغ">
+                <input type="number" id="foreignAmount" class="calc-input" value="100">
                 <select id="currencyType" class="calc-input">
                     <option value="EUR">EUR (€)</option>
                     <option value="USD">USD ($)</option>
                     <option value="GBP">GBP (£)</option>
                 </select>
             </div>
-            <div class="calc-row" style="margin-top: 10px;">
-                <button onclick="convertCurrency()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border: none; border-radius: 12px; font-weight: bold; color: #0f172a; cursor: pointer; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.25);">حساب المعادل بالدينار (DZD)</button>
+            <div class="calc-row">
+                <button onclick="convertCurrency()" style="width:100%; padding:12px; background:var(--accent-gold); border:none; border-radius:12px; font-weight:bold; color:#0f172a; cursor:pointer;">حساب المعادل (DZD)</button>
             </div>
-            <div id="calcResult" style="text-align: center; margin-top: 14px; font-weight: 700; color: var(--accent-cyan); font-size: 1.05rem;"></div>
+            <div id="calcResult" style="text-align:center; margin-top:12px; font-weight:bold; color:var(--accent-cyan);"></div>
         </div>
 
     </div>
 
-    <!-- Glassmorphism Dynamic Modal Overlay -->
+    <!-- Modal Sheet -->
     <div class="modal-overlay" id="serviceModal" onclick="closeModalOnOuter(event)">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 id="modalTitle"><i class="fa-solid fa-star"></i> تفاصيل الخدمة</h3>
                 <div class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></div>
             </div>
-            <div class="modal-item-list" id="modalBody">
-                <!-- Dynamic Items Inserted via JS -->
-            </div>
+            <div id="modalBody" style="display:flex; flex-direction:column; gap:12px;"></div>
         </div>
     </div>
 
-    <!-- Bottom Navigation -->
+    <!-- Bottom Nav -->
     <nav class="bottom-nav">
-        <a href="#" class="nav-item active">
-            <i class="fa-solid fa-house"></i>
-            <span>الرئيسية</span>
-        </a>
-        <a href="#" class="nav-item">
-            <i class="fa-solid fa-compass"></i>
-            <span>استكشف</span>
-        </a>
-        <a href="#" class="nav-item">
-            <i class="fa-solid fa-calculator"></i>
-            <span>الميزانية</span>
-        </a>
-        <a href="#" class="nav-item">
-            <i class="fa-solid fa-user"></i>
-            <span>حسابي</span>
-        </a>
+        <a href="#" class="nav-item active"><i class="fa-solid fa-house"></i><span>الرئيسية</span></a>
+        <a href="#" class="nav-item"><i class="fa-solid fa-compass"></i><span>استكشف</span></a>
+        <a href="#" class="nav-item"><i class="fa-solid fa-calculator"></i><span>الميزانية</span></a>
+        <a href="#" class="nav-item"><i class="fa-solid fa-user"></i><span>حسابي</span></a>
     </nav>
 
     <script>
-        // Modal Data Mapping
+        let isSpeechEnabled = true;
+        let currentLang = 'ar';
+        let isSatellite = true;
+
+        // Speech Synthesis Engine (AR/EN Voice)
+        function speakText(text, lang = currentLang) {
+            if (!isSpeechEnabled || !('speechSynthesis' in window)) return;
+
+            window.speechSynthesis.cancel(); // Stop current speech
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = lang === 'ar' ? 'ar-SA' : 'en-US';
+            utterance.pitch = 1.0;
+            utterance.rate = 0.95;
+
+            const avatar = document.getElementById('robotAvatar');
+            utterance.onstart = () => avatar.classList.add('speaking');
+            utterance.onend = () => avatar.classList.remove('speaking');
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function toggleSpeech() {
+            isSpeechEnabled = !isSpeechEnabled;
+            const btnLabel = document.getElementById('voiceLabel');
+            btnLabel.innerText = isSpeechEnabled ? 'الصوت التفاعلي: مفعل' : 'الصوت التفاعلي: معطل';
+            if (!isSpeechEnabled) stopSpeech();
+        }
+
+        function stopSpeech() {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            document.getElementById('robotAvatar').classList.remove('speaking');
+        }
+
+        // AI Robot Query Execution & Auto Map Update
+        function askAIAndSpeak() {
+            const query = document.getElementById('aiQuery').value.trim();
+            const res = document.getElementById('aiResponse');
+            if (!query) return;
+
+            res.style.display = 'block';
+            
+            let responseText = "";
+            let mapLocation = query;
+
+            if (currentLang === 'ar') {
+                responseText = `مرحباً بك! يقوم روبوت AI GLOBAL TOURISM بتحليل إحداثيات ${query}. أهلاً بك في الجزائر، تم تحديث خريطة الـ 3D بالوجهة المطلوبة.`;
+            } else {
+                responseText = `Welcome! AI GLOBAL TOURISM robot is analyzing coordinates for ${query}. Destination updated on the 3D map.`;
+            }
+
+            res.innerText = responseText;
+            speakText(responseText);
+
+            // Update Google Maps Location dynamically in 3D Perspective
+            const mapFrame = document.getElementById('gmapFrame');
+            const mapTypeParam = isSatellite ? '&t=k' : '';
+            mapFrame.src = `https://maps.google.com/maps?q=${encodeURIComponent(mapLocation)}&z=15${mapTypeParam}&ie=UTF8&iwloc=&output=embed`;
+            document.getElementById('mapLocationLabel').innerText = `${query} (3D View)`;
+        }
+
+        function toggleMapMode() {
+            isSatellite = !isSatellite;
+            const btn = document.getElementById('btnMapMode');
+            btn.innerText = isSatellite ? 'وضع الساتلايت 3D' : 'وضع الشوارع HD';
+            const query = document.getElementById('aiQuery').value.trim() || "Algiers,Algeria";
+            const mapFrame = document.getElementById('gmapFrame');
+            const mapTypeParam = isSatellite ? '&t=k' : '';
+            mapFrame.src = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=15${mapTypeParam}&ie=UTF8&iwloc=&output=embed`;
+        }
+
+        // Language Switcher
+        function switchLanguage() {
+            currentLang = document.getElementById('langSelect').value;
+            if (currentLang === 'en') {
+                document.getElementById('heroTitle').innerText = "Explore The World Smartly 🌍";
+                document.getElementById('heroSub').innerText = "3D Interactive Voice Robot & AI Maps Engine";
+                document.getElementById('robotName').innerText = "Voice AI Assistant Robot";
+                document.getElementById('robotStatus').innerText = "Ready to speak in English & Arabic 🇬🇧 🇩🇿";
+                document.getElementById('aiQuery').placeholder = "Ask about a destination: e.g. Tassili, Algiers...";
+                speakText("Language switched to English. How can I assist your trip today?", 'en');
+            } else {
+                document.getElementById('heroTitle').innerText = "استكشف العالم بذكاء 🌍";
+                document.getElementById('heroSub').innerText = "المرشد الصوتي المتكلم 3D وخرائط الذكاء الاصطناعي";
+                document.getElementById('robotName').innerText = "الروبوت الذكي المساعد (Voice AI)";
+                document.getElementById('robotStatus').innerText = "جاهز للتحدث والاستماع باللغتين 🇩🇿 🇬🇧";
+                document.getElementById('aiQuery').placeholder = "اسأل عن وجهة: مثال: مقام الشهيد، التاسيلي...";
+                speakText("تم تغيير اللغة إلى العربية. كيف يمكنني مساعدتك في رحلتك اليوم؟", 'ar');
+            }
+        }
+
+        // Modal Details
         const serviceData = {
             gps: {
-                title: '<i class="fa-solid fa-map-location-dot"></i> المعالم والمواقع القريبة',
+                title: '<i class="fa-solid fa-map-location-dot"></i> المعالم والمواقع',
                 items: [
-                    { title: 'مقام الشهيد & حديقة الحامة', desc: 'الجزائر العاصمة — موقع تاريخي وطبيعي خلاب', icon: 'fa-monument' },
-                    { title: 'صحراء التاسيلي وقصر غرداية', desc: 'جنوب الجزائر — موروث عالمي لليونسكو', icon: 'fa-mountain-sun' },
-                    { title: 'آثار تيبازة الرومانية', desc: 'تيبازة — إطلالة بحرية وآثار تاريخية مجتمعة', icon: 'fa-landmark' }
+                    { title: 'مقام الشهيد & حديقة الحامة', desc: 'إحداثيات 3D وسياحة تاريخية', icon: 'fa-monument' },
+                    { title: 'صحراء التاسيلي', desc: 'موروث عالمي ومسارات صحراوية', icon: 'fa-mountain-sun' }
                 ]
             },
             hotels: {
-                title: '<i class="fa-solid fa-hotel"></i> الإقامة والفنادق الموصى بها',
+                title: '<i class="fa-solid fa-hotel"></i> الفنادق والإقامة',
                 items: [
-                    { title: 'فندق الأوراسي (El Aurassi)', desc: 'الجزائر العاصمة — إطلالة بانورامية على البحر', icon: 'fa-star' },
-                    { title: 'فندق الشيراتون (Sheraton)', desc: 'وهران / العاصمة — خدمات فندقية راقية 5 نجوم', icon: 'fa-bed' },
-                    { title: 'منتجعات ورقلة وتيميمون', desc: 'إقامة صحراوية تقليدية فاخرة', icon: 'fa-caravan' }
+                    { title: 'فندق الأوراسي / الشيراتون', desc: 'إقامة فاخرة بإطلالة بحرية', icon: 'fa-star' }
                 ]
             },
             food: {
-                title: '<i class="fa-solid fa-utensils"></i> المطاعم والمأكولات المحلية',
+                title: '<i class="fa-solid fa-utensils"></i> المطاعم والمأكولات',
                 items: [
-                    { title: 'مطاعم القصبة العتيقة', desc: 'أطباق تقليدية: الكسكسي، الشوربة البيضاء، والمثوم', icon: 'fa-bowl-food' },
-                    { title: 'مطاعم سمك ميناء الجزاير وجميلة', desc: 'أجود المأكولات البحرية الطازجة', icon: 'fa-fish' }
+                    { title: 'مطاعم القصبة العتيقة', desc: 'أطباق تقليدية جزائرية أصيلة', icon: 'fa-bowl-food' }
                 ]
             },
             transport: {
-                title: '<i class="fa-solid fa-taxi"></i> خدمات النقل الذكية',
+                title: '<i class="fa-solid fa-taxi"></i> خدمات النقل VIP',
                 items: [
-                    { title: 'حجز سيارات السياحة والـ VIP', desc: 'تنقلات خاصة مع سائق بين الولايات', icon: 'fa-car' },
-                    { title: 'مترو وترامواي الجزائر', desc: 'شبكة نقل حديثة داخل المدن الكبرى', icon: 'fa-train' }
+                    { title: 'حجز سيارات السياحة والمترو', desc: 'تنقل ذكي ومستمر', icon: 'fa-car' }
                 ]
             }
         };
 
         function openModal(type) {
             const data = serviceData[type];
-            if(!data) return;
-
+            if (!data) return;
             document.getElementById('modalTitle').innerHTML = data.title;
             const modalBody = document.getElementById('modalBody');
-            
             modalBody.innerHTML = data.items.map(item => `
-                <div class="modal-item">
-                    <i class="fa-solid ${item.icon}"></i>
-                    <div class="modal-item-info">
-                        <h5>${item.title}</h5>
-                        <p>${item.desc}</p>
+                <div style="background:var(--glass-bg); border:1px solid var(--glass-border); padding:12px; border-radius:14px; display:flex; align-items:center; gap:12px;">
+                    <i class="fa-solid ${item.icon}" style="font-size:1.3rem; color:var(--accent-emerald);"></i>
+                    <div>
+                        <h5 style="font-size:0.9rem;">${item.title}</h5>
+                        <p style="font-size:0.75rem; color:var(--text-muted);">${item.desc}</p>
                     </div>
                 </div>
             `).join('');
-
             document.getElementById('serviceModal').classList.add('active');
+            speakText(type === 'gps' ? "عرض المعالم والمواقع القريبة" : "عرض خيارات الخدمة المطلوبة");
         }
 
         function closeModal() {
@@ -656,17 +728,7 @@
         }
 
         function closeModalOnOuter(e) {
-            if(e.target.classList.contains('modal-overlay')) {
-                closeModal();
-            }
-        }
-
-        function askAI() {
-            const query = document.getElementById('aiQuery').value;
-            const res = document.getElementById('aiResponse');
-            if(!query) return;
-            res.style.display = 'block';
-            res.innerText = "🤖 محرك AI GLOBAL TOURISM يحلل طلبك... (جاري إعداد التوصيات الذكية)";
+            if (e.target.classList.contains('modal-overlay')) closeModal();
         }
 
         function convertCurrency() {
@@ -675,9 +737,10 @@
             let rate = 240; 
             if (type === 'USD') rate = 220;
             if (type === 'GBP') rate = 270;
-
             const total = amount * rate;
-            document.getElementById('calcResult').innerText = `${amount} ${type} ≈ ${total.toLocaleString()} DZD`;
+            const resText = `${amount} ${type} ≈ ${total.toLocaleString()} DZD`;
+            document.getElementById('calcResult').innerText = resText;
+            speakText(resText);
         }
     </script>
 </body>
