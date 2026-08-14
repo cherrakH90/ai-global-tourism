@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Digital Tourism | منصة السياحة الرقمية</title>
+    <title>AI GLOBAL TOURISM | منصة السياحة الرقمية العالمية الذكية</title>
     <!-- Font Awesome Icons & Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -64,7 +64,7 @@
 
         .brand h1 {
             font-size: 1.1rem;
-            font-weight: 700;
+            font-weight: 800;
             background: linear-gradient(90deg, #06b6d4, #10b981);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -87,7 +87,7 @@
         }
 
         .hero h2 {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             margin-bottom: 8px;
             font-weight: 800;
         }
@@ -211,6 +211,7 @@
             flex-direction: column;
             gap: 10px;
             transition: transform 0.2s;
+            cursor: pointer;
         }
 
         .module-card:active {
@@ -263,6 +264,7 @@
             color: #fff;
             text-align: center;
             font-size: 0.9rem;
+            outline: none;
         }
 
         /* Bottom Navigation Bar */
@@ -306,9 +308,8 @@
     <!-- Header -->
     <header>
         <div class="brand">
-            <i class="fa-solid => fa-compass-drafting"></i>
             <i class="fa-solid fa-earth-africa"></i>
-            <h1>Global Tourism</h1>
+            <h1>AI GLOBAL TOURISM</h1>
         </div>
         <select class="lang-switch" id="langSelect">
             <option value="ar">🇩🇿 العربية</option>
@@ -319,8 +320,8 @@
 
     <!-- Hero Area -->
     <section class="hero">
-        <h2>اكتشف الجزائر بذكاء 🇩🇿</h2>
-        <p>دليلك الذكي، تحويل العملات، وحاسبة رحلتك في منصة واحدة</p>
+        <h2>استكشف العالم بذكاء 🌍</h2>
+        <p>الوجهة الأولى: الجزائر 🇩🇿 — مرشد AI، محول العملات، وحاسبة ميزانية الرحلة</p>
         <div class="search-box">
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="text" placeholder="ابحث عن وجهة، فندق، أو معلم سياحي...">
@@ -332,49 +333,49 @@
         <!-- AI Assistant Section -->
         <div class="ai-card">
             <h3><i class="fa-solid fa-robot" style="color: var(--accent-cyan);"></i> المرشد السياحي الذكي (AI Guide)</h3>
-            <p>اسأل الذكاء الاصطناعي عن أفضل المسارات السياحية، الأسعار، والمصاعب للنقل.</p>
+            <p>خطط لرحلتك، اكتشف المسارات المحلية، واحصل على توصيات فورية بالذكاء الاصطناعي.</p>
             <div class="ai-input-group">
-                <input type="text" id="aiQuery" placeholder="مثال: اقتراح برنامج يومين في وهران؟">
-                <button onclick="askAI()">اسأل</button>
+                <input type="text" id="aiQuery" placeholder="مثال: برنامج 3 أيام في صحراء التاسيلي؟">
+                <button onclick="askAI()">اسأل AI</button>
             </div>
             <div id="aiResponse" style="margin-top: 10px; font-size: 0.85rem; display: none; color: #4ade80;"></div>
         </div>
 
         <!-- Services Matrix -->
         <div class="section-title">
-            <i class="fa-solid fa-grid-2"></i> الخدمات الرئيسية
+            <i class="fa-solid fa-border-all"></i> الخدمات الرقمية الذكية
         </div>
 
         <div class="grid-modules">
             <div class="module-card">
                 <div class="module-icon"><i class="fa-solid fa-map-location-dot"></i></div>
-                <h4>المعالم السياحية</h4>
-                <span>استكشف الآثار والشواطئ</span>
+                <h4>المعالم والـ GPS</h4>
+                <span>اكتشاف الأماكن القريبة</span>
             </div>
             <div class="module-card">
                 <div class="module-icon"><i class="fa-solid fa-hotel"></i></div>
                 <h4>الفنادق والإقامة</h4>
-                <span>أفضل خيارات الحجز</span>
+                <span>خيارات حجز مخصصة</span>
             </div>
             <div class="module-card">
                 <div class="module-icon"><i class="fa-solid fa-utensils"></i></div>
                 <h4>المطاعم المحلية</h4>
-                <span>تذوق الأطباق التقليدية</span>
+                <span>تذوق وتجارب مميزة</span>
             </div>
             <div class="module-card">
                 <div class="module-icon"><i class="fa-solid fa-taxi"></i></div>
-                <h4>النقل والمواصلات</h4>
-                <span>خيارات التنقل السهل</span>
+                <h4>النقل والتنقل</h4>
+                <span>حافلات، سيارات، وتكاسي</span>
             </div>
         </div>
 
         <!-- Financial & Exchange Helper -->
         <div class="section-title">
-            <i class="fa-solid fa-coins"></i> خدمات الصرف والميزانية
+            <i class="fa-solid fa-coins"></i> إدارة الميزانية والعملات
         </div>
 
         <div class="calc-card">
-            <h4><i class="fa-solid fa-arrow-right-arrow-left" style="color: var(--accent-gold);"></i> محول العملات (EUR/USD → DZD)</h4>
+            <h4><i class="fa-solid fa-arrow-right-arrow-left" style="color: var(--accent-gold);"></i> محول العملات الذكي (EUR/USD → DZD)</h4>
             <div class="calc-row">
                 <input type="number" id="foreignAmount" class="calc-input" value="100" placeholder="المبلغ">
                 <select id="currencyType" class="calc-input">
@@ -384,7 +385,7 @@
                 </select>
             </div>
             <div class="calc-row" style="margin-top: 8px;">
-                <button onclick="convertCurrency()" style="width: 100%; padding: 10px; background: var(--accent-gold); border: none; border-radius: 10px; font-weight: bold; color: #0f172a;">حساب المعادل بالدينار (DZD)</button>
+                <button onclick="convertCurrency()" style="width: 100%; padding: 10px; background: var(--accent-gold); border: none; border-radius: 10px; font-weight: bold; color: #0f172a; cursor: pointer;">حساب المعادل بالدينار (DZD)</button>
             </div>
             <div id="calcResult" style="text-align: center; margin-top: 12px; font-weight: 700; color: var(--accent-cyan);"></div>
         </div>
@@ -417,13 +418,13 @@
             const res = document.getElementById('aiResponse');
             if(!query) return;
             res.style.display = 'block';
-            res.innerText = "🤖 الذكاء الاصطناعي يُعالج طلبك... (سيتم ربط الخدمة بالمحرك البرمجي)";
+            res.innerText = "🤖 محرك AI GLOBAL TOURISM يحلل طلبك... (جاري إعداد التوصيات الذكية)";
         }
 
         function convertCurrency() {
             const amount = parseFloat(document.getElementById('foreignAmount').value) || 0;
             const type = document.getElementById('currencyType').value;
-            let rate = 240; // تقديري EUR/DZD
+            let rate = 240; 
             if (type === 'USD') rate = 220;
             if (type === 'GBP') rate = 270;
 
