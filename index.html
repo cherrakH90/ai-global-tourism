@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI GLOBAL TOURISM | منصة السياحة الرقمية العالمية الذكية</title>
-    <!-- Font Awesome Icons & Google Fonts -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI GLOBAL TOURISM | منصة السياحة الرقمية الذكية</title>
+    <!-- Font Awesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
     <style>
+        /* ===== ROOT ===== */
         :root {
             --bg-gradient: radial-gradient(circle at top right, #1e1b4b 0%, #0f172a 60%, #020617 100%);
             --glass-bg: rgba(255, 255, 255, 0.04);
@@ -39,30 +39,33 @@
             overflow-x: hidden;
         }
 
-        /* Background Glows */
+        /* ===== BACKGROUND GLOWS ===== */
         body::before {
             content: '';
             position: fixed;
-            top: -10%; left: -10%;
-            width: 300px; height: 300px;
+            top: -10%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
             background: rgba(6, 182, 212, 0.15);
             filter: blur(120px);
             border-radius: 50%;
             z-index: -1;
         }
-
         body::after {
             content: '';
             position: fixed;
-            bottom: 10%; right: -10%;
-            width: 350px; height: 350px;
+            bottom: 10%;
+            right: -10%;
+            width: 350px;
+            height: 350px;
             background: rgba(16, 185, 129, 0.12);
             filter: blur(140px);
             border-radius: 50%;
             z-index: -1;
         }
 
-        /* Header Layout */
+        /* ===== HEADER ===== */
         header {
             position: sticky;
             top: 0;
@@ -75,6 +78,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            will-change: transform, backdrop-filter;
+            -webkit-backface-visibility: hidden;
         }
 
         .brand {
@@ -82,13 +87,11 @@
             align-items: center;
             gap: 10px;
         }
-
         .brand i {
             font-size: 1.5rem;
             color: var(--accent-cyan);
             filter: drop-shadow(0 0 8px var(--accent-cyan-glow));
         }
-
         .brand h1 {
             font-size: 1.15rem;
             font-weight: 800;
@@ -105,27 +108,26 @@
             border-radius: 20px;
             font-size: 0.85rem;
             outline: none;
+            cursor: pointer;
         }
 
-        /* Hero */
+        /* ===== HERO ===== */
         .hero {
             padding: 24px 20px 16px 20px;
             text-align: center;
         }
-
         .hero h2 {
             font-size: 1.6rem;
             margin-bottom: 6px;
             font-weight: 800;
         }
-
         .hero p {
             color: var(--text-muted);
             font-size: 0.88rem;
             margin-bottom: 18px;
         }
 
-        /* Container Sections */
+        /* ===== CONTAINER ===== */
         .container {
             padding: 0 20px;
             max-width: 600px;
@@ -140,12 +142,11 @@
             align-items: center;
             gap: 8px;
         }
-
         .section-title i {
             color: var(--accent-cyan);
         }
 
-        /* AI Speaking Robot Card */
+        /* ===== AI ROBOT CARD ===== */
         .ai-robot-card {
             background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(16, 185, 129, 0.1) 100%);
             border: 1px solid rgba(6, 182, 212, 0.3);
@@ -154,6 +155,8 @@
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             position: relative;
+            will-change: transform, backdrop-filter;
+            -webkit-backface-visibility: hidden;
         }
 
         .robot-header {
@@ -176,7 +179,6 @@
             color: var(--accent-cyan);
             position: relative;
         }
-
         .robot-avatar.speaking {
             animation: pulse-glow 1.2s infinite alternate;
         }
@@ -190,7 +192,6 @@
             font-size: 1rem;
             font-weight: 700;
         }
-
         .robot-info p {
             font-size: 0.78rem;
             color: var(--text-muted);
@@ -201,7 +202,6 @@
             gap: 8px;
             margin-top: 10px;
         }
-
         .ai-input-group input {
             flex: 1;
             padding: 12px;
@@ -212,7 +212,6 @@
             font-size: 0.85rem;
             outline: none;
         }
-
         .ai-input-group button {
             background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
             color: #0f172a;
@@ -224,6 +223,10 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            transition: transform 0.15s;
+        }
+        .ai-input-group button:active {
+            transform: scale(0.94);
         }
 
         .voice-controls {
@@ -231,7 +234,6 @@
             gap: 10px;
             margin-top: 10px;
         }
-
         .btn-voice {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
@@ -244,22 +246,51 @@
             align-items: center;
             gap: 6px;
         }
-
         .btn-voice.active {
             border-color: var(--accent-emerald);
             color: var(--accent-emerald);
         }
 
-        /* 3D Glassmorphism Google Map Container */
+        #aiResponse {
+            margin-top: 12px;
+            font-size: 0.88rem;
+            display: none;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            transition: all 0.3s;
+        }
+
+        /* ===== MAP WRAPPER (enhanced glass + hologram) ===== */
         .map-wrapper {
             background: var(--glass-card);
             border: 1px solid var(--glass-border);
             border-radius: 22px;
             padding: 12px;
             backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             position: relative;
             margin-top: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            will-change: transform, backdrop-filter;
+            -webkit-backface-visibility: hidden;
+            overflow: hidden; /* keeps pseudo inside */
+        }
+
+        /* Holographic overlay */
+        .map-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 22px;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+            box-shadow: inset 0 0 30px rgba(6, 182, 212, 0.15);
+            z-index: 2;
         }
 
         .map-controls {
@@ -268,8 +299,9 @@
             align-items: center;
             margin-bottom: 10px;
             padding: 0 4px;
+            position: relative;
+            z-index: 3;
         }
-
         .map-mode-btn {
             background: rgba(6, 182, 212, 0.15);
             border: 1px solid var(--accent-cyan);
@@ -289,13 +321,14 @@
             filter: contrast(1.05) saturate(1.1);
             transform: perspective(600px) rotateX(4deg);
             transition: transform 0.4s ease;
+            position: relative;
+            z-index: 1;
         }
-
         .map-frame-3d:hover {
             transform: perspective(600px) rotateX(0deg);
         }
 
-        /* Grid Services */
+        /* ===== MODULES GRID ===== */
         .grid-modules {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -311,16 +344,19 @@
             flex-direction: column;
             gap: 8px;
             backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             cursor: pointer;
             transition: transform 0.2s;
+            will-change: transform, backdrop-filter;
+            -webkit-backface-visibility: hidden;
         }
-
         .module-card:active {
             transform: scale(0.96);
         }
 
         .module-icon {
-            width: 42px; height: 42px;
+            width: 42px;
+            height: 42px;
             border-radius: 12px;
             background: rgba(255, 255, 255, 0.06);
             display: flex;
@@ -329,11 +365,15 @@
             font-size: 1.2rem;
             color: var(--accent-cyan);
         }
+        .module-card h4 {
+            font-size: 0.92rem;
+        }
+        .module-card span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
 
-        .module-card h4 { font-size: 0.92rem; }
-        .module-card span { font-size: 0.75rem; color: var(--text-muted); }
-
-        /* Currency Box */
+        /* ===== CURRENCY CONVERTER ===== */
         .calc-card {
             background: var(--glass-card);
             border: 1px solid var(--glass-border);
@@ -341,14 +381,13 @@
             padding: 18px;
             margin-top: 10px;
             backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
-
         .calc-row {
             display: flex;
             gap: 10px;
             margin-top: 10px;
         }
-
         .calc-input {
             flex: 1;
             padding: 10px;
@@ -359,13 +398,33 @@
             text-align: center;
             outline: none;
         }
+        .calc-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent-gold);
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            color: #0f172a;
+            cursor: pointer;
+        }
+        #calcResult {
+            text-align: center;
+            margin-top: 12px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+        }
 
-        /* Modal Overlay */
+        /* ===== MODAL ===== */
         .modal-overlay {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: rgba(2, 6, 23, 0.78);
             backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             z-index: 2000;
             display: flex;
             align-items: flex-end;
@@ -373,7 +432,6 @@
             pointer-events: none;
             transition: opacity 0.3s ease;
         }
-
         .modal-overlay.active {
             opacity: 1;
             pointer-events: auto;
@@ -390,7 +448,6 @@
             transform: translateY(100%);
             transition: transform 0.35s ease;
         }
-
         .modal-overlay.active .modal-content {
             transform: translateY(0);
         }
@@ -401,31 +458,35 @@
             align-items: center;
             margin-bottom: 16px;
         }
-
         .modal-close {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             color: var(--text-muted);
-            width: 32px; height: 32px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
         }
 
-        /* Bottom Nav */
+        /* ===== BOTTOM NAV ===== */
         .bottom-nav {
             position: fixed;
-            bottom: 0; left: 0; right: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
             height: 65px;
             background: rgba(15, 23, 42, 0.9);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-top: 1px solid var(--glass-border);
             display: flex;
             justify-content: space-around;
             align-items: center;
             z-index: 1000;
         }
-
         .nav-item {
             display: flex;
             flex-direction: column;
@@ -434,17 +495,33 @@
             color: var(--text-muted);
             text-decoration: none;
             font-size: 0.75rem;
+            cursor: pointer;
         }
-
         .nav-item.active {
             color: var(--accent-cyan);
-            font-weight: bold;
+            font-weight: 700;
+        }
+        .nav-item i {
+            font-size: 1.1rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .hero h2 {
+                font-size: 1.3rem;
+            }
+            .grid-modules {
+                gap: 10px;
+            }
+            .module-card {
+                padding: 14px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
+    <!-- ===== HEADER ===== -->
     <header>
         <div class="brand">
             <i class="fa-solid fa-earth-africa"></i>
@@ -456,15 +533,15 @@
         </select>
     </header>
 
-    <!-- Hero -->
+    <!-- ===== HERO ===== -->
     <section class="hero">
         <h2 id="heroTitle">استكشف العالم بذكاء 🌍</h2>
         <p id="heroSub">المرشد الصوتي المتكلم 3D وخرائط الذكاء الاصطناعي</p>
     </section>
 
     <div class="container">
-        
-        <!-- Speaking AI Robot Widget -->
+
+        <!-- ===== AI ROBOT CARD ===== -->
         <div class="ai-robot-card">
             <div class="robot-header">
                 <div class="robot-avatar" id="robotAvatar">
@@ -477,7 +554,7 @@
             </div>
 
             <div class="ai-input-group">
-                <input type="text" id="aiQuery" placeholder="اسأل عن وجهة: مثال: مقام الشهيد، التاسيلي...">
+                <input type="text" id="aiQuery" placeholder="اسأل عن وجهة: مثال: مقام الشهيد، التاسيلي..." />
                 <button onclick="askAIAndSpeak()">
                     <i class="fa-solid fa-paper-plane"></i>
                     <span>إرسال</span>
@@ -486,19 +563,21 @@
 
             <div class="voice-controls">
                 <button class="btn-voice active" id="speechToggle" onclick="toggleSpeech()">
-                    <i class="fa-solid fa-volume-high"></i> <span id="voiceLabel">الصوت التفاعلي: مفعل</span>
+                    <i class="fa-solid fa-volume-high"></i>
+                    <span id="voiceLabel">الصوت التفاعلي: مفعل</span>
                 </button>
                 <button class="btn-voice" onclick="stopSpeech()">
                     <i class="fa-solid fa-circle-stop"></i> إيقاف الصوت
                 </button>
             </div>
 
-            <div id="aiResponse" style="margin-top: 12px; font-size: 0.88rem; display: none; color: #4ade80; background: rgba(16, 185, 129, 0.1); padding: 12px; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.2);"></div>
+            <div id="aiResponse"></div>
         </div>
 
-        <!-- 3D Google Maps AI View -->
+        <!-- ===== 3D MAP SECTION ===== -->
         <div class="section-title">
-            <i class="fa-solid fa-cubes"></i> الخريطة الذكية ثلاثية الأبعاد (AI 3D Map)
+            <i class="fa-solid fa-cubes"></i>
+            <span id="mapTitle">الخريطة الذكية ثلاثية الأبعاد (AI 3D Map)</span>
         </div>
 
         <div class="map-wrapper">
@@ -506,52 +585,54 @@
                 <span style="font-size: 0.8rem; color: var(--text-muted);" id="mapLocationLabel">الجزائر العاصمة 3D View</span>
                 <button class="map-mode-btn" onclick="toggleMapMode()" id="btnMapMode">وضع الساتلايت 3D</button>
             </div>
-            <iframe 
-                id="gmapFrame" 
-                class="map-frame-3d" 
-                src="https://maps.google.com/maps?q=Algiers,Algeria&t=k&z=15&ie=UTF8&iwloc=&output=embed" 
-                allowfullscreen="" 
+            <iframe
+                id="gmapFrame"
+                class="map-frame-3d"
+                src="https://maps.google.com/maps?q=Algiers,Algeria&t=k&z=15&ie=UTF8&iwloc=&output=embed"
+                allowfullscreen=""
                 loading="lazy">
             </iframe>
         </div>
 
-        <!-- Services Matrix -->
+        <!-- ===== SERVICES MATRIX ===== -->
         <div class="section-title">
-            <i class="fa-solid fa-border-all"></i> الخدمات الرقمية التفاعلية
+            <i class="fa-solid fa-border-all"></i>
+            <span id="servicesTitle">الخدمات الرقمية التفاعلية</span>
         </div>
 
         <div class="grid-modules">
             <div class="module-card" onclick="openModal('gps')">
                 <div class="module-icon"><i class="fa-solid fa-map-location-dot"></i></div>
                 <h4 id="m1">المعالم والـ GPS</h4>
-                <span>تحديد الموقع التلقائي</span>
+                <span id="m1desc">تحديد الموقع التلقائي</span>
             </div>
             <div class="module-card" onclick="openModal('hotels')">
                 <div class="module-icon"><i class="fa-solid fa-hotel"></i></div>
                 <h4 id="m2">الفنادق والإقامة</h4>
-                <span>خيارات حجز مخصصة</span>
+                <span id="m2desc">خيارات حجز مخصصة</span>
             </div>
             <div class="module-card" onclick="openModal('food')">
                 <div class="module-icon"><i class="fa-solid fa-utensils"></i></div>
                 <h4 id="m3">المطاعم المحلية</h4>
-                <span>تذوق وتجارب مميزة</span>
+                <span id="m3desc">تذوق وتجارب مميزة</span>
             </div>
             <div class="module-card" onclick="openModal('transport')">
                 <div class="module-icon"><i class="fa-solid fa-taxi"></i></div>
                 <h4 id="m4">النقل والتنقل</h4>
-                <span>حافلات، سيارات، وتكاسي</span>
+                <span id="m4desc">حافلات، سيارات، وتكاسي</span>
             </div>
         </div>
 
-        <!-- Financial Converter -->
+        <!-- ===== FINANCIAL CONVERTER ===== -->
         <div class="section-title">
-            <i class="fa-solid fa-coins"></i> إدارة الميزانية والعملات
+            <i class="fa-solid fa-coins"></i>
+            <span id="budgetTitle">إدارة الميزانية والعملات</span>
         </div>
 
         <div class="calc-card">
-            <h4><i class="fa-solid fa-arrow-right-arrow-left" style="color: var(--accent-gold);"></i> محول العملات الذكي</h4>
+            <h4><i class="fa-solid fa-arrow-right-arrow-left" style="color: var(--accent-gold);"></i> <span id="converterTitle">محول العملات الذكي</span></h4>
             <div class="calc-row">
-                <input type="number" id="foreignAmount" class="calc-input" value="100">
+                <input type="number" id="foreignAmount" class="calc-input" value="100" />
                 <select id="currencyType" class="calc-input">
                     <option value="EUR">EUR (€)</option>
                     <option value="USD">USD ($)</option>
@@ -559,14 +640,14 @@
                 </select>
             </div>
             <div class="calc-row">
-                <button onclick="convertCurrency()" style="width:100%; padding:12px; background:var(--accent-gold); border:none; border-radius:12px; font-weight:bold; color:#0f172a; cursor:pointer;">حساب المعادل (DZD)</button>
+                <button class="calc-btn" onclick="convertCurrency()"><span id="calcBtnText">حساب المعادل (DZD)</span></button>
             </div>
-            <div id="calcResult" style="text-align:center; margin-top:12px; font-weight:bold; color:var(--accent-cyan);"></div>
+            <div id="calcResult"></div>
         </div>
 
     </div>
 
-    <!-- Modal Sheet -->
+    <!-- ===== MODAL ===== -->
     <div class="modal-overlay" id="serviceModal" onclick="closeModalOnOuter(event)">
         <div class="modal-content">
             <div class="modal-header">
@@ -577,24 +658,242 @@
         </div>
     </div>
 
-    <!-- Bottom Nav -->
+    <!-- ===== BOTTOM NAV ===== -->
     <nav class="bottom-nav">
-        <a href="#" class="nav-item active"><i class="fa-solid fa-house"></i><span>الرئيسية</span></a>
-        <a href="#" class="nav-item"><i class="fa-solid fa-compass"></i><span>استكشف</span></a>
-        <a href="#" class="nav-item"><i class="fa-solid fa-calculator"></i><span>الميزانية</span></a>
-        <a href="#" class="nav-item"><i class="fa-solid fa-user"></i><span>حسابي</span></a>
+        <div class="nav-item active" id="navHome"><i class="fa-solid fa-house"></i><span>الرئيسية</span></div>
+        <div class="nav-item" id="navExplore"><i class="fa-solid fa-compass"></i><span>استكشف</span></div>
+        <div class="nav-item" id="navBudget"><i class="fa-solid fa-calculator"></i><span>الميزانية</span></div>
+        <div class="nav-item" id="navAccount"><i class="fa-solid fa-user"></i><span>حسابي</span></div>
     </nav>
 
+    <!-- ================================================== -->
+    <!-- =============== JAVASCRIPT ======================= -->
+    <!-- ================================================== -->
     <script>
-        let isSpeechEnabled = true;
+        // ============================================================
+        // 1. TRANSLATIONS (FULL)
+        // ============================================================
+        const translations = {
+            ar: {
+                heroTitle: 'استكشف العالم بذكاء 🌍',
+                heroSub: 'المرشد الصوتي المتكلم 3D وخرائط الذكاء الاصطناعي',
+                robotName: 'الروبوت الذكي المساعد (Voice AI)',
+                robotStatus: 'جاهز للتحدث والاستماع باللغتين 🇩🇿 🇬🇧',
+                aiPlaceholder: 'اسأل عن وجهة: مثال: مقام الشهيد، التاسيلي...',
+                sendBtn: 'إرسال',
+                voiceLabelOn: 'الصوت التفاعلي: مفعل',
+                voiceLabelOff: 'الصوت التفاعلي: معطل',
+                voiceStop: 'إيقاف الصوت',
+                mapTitle: 'الخريطة الذكية ثلاثية الأبعاد (AI 3D Map)',
+                mapLabel: 'الجزائر العاصمة 3D View',
+                mapBtnSat: 'وضع الساتلايت 3D',
+                mapBtnStreet: 'وضع الشوارع HD',
+                servicesTitle: 'الخدمات الرقمية التفاعلية',
+                m1: 'المعالم والـ GPS',
+                m1desc: 'تحديد الموقع التلقائي',
+                m2: 'الفنادق والإقامة',
+                m2desc: 'خيارات حجز مخصصة',
+                m3: 'المطاعم المحلية',
+                m3desc: 'تذوق وتجارب مميزة',
+                m4: 'النقل والتنقل',
+                m4desc: 'حافلات، سيارات، وتكاسي',
+                budgetTitle: 'إدارة الميزانية والعملات',
+                converterTitle: 'محول العملات الذكي',
+                calcBtnText: 'حساب المعادل (DZD)',
+                navHome: 'الرئيسية',
+                navExplore: 'استكشف',
+                navBudget: 'الميزانية',
+                navAccount: 'حسابي',
+                // Modal data (used dynamically)
+                modal_gps_title: '📍 المعالم والمواقع',
+                modal_gps_item1: 'مقام الشهيد & حديقة الحامة',
+                modal_gps_desc1: 'إحداثيات 3D وسياحة تاريخية',
+                modal_gps_item2: 'صحراء التاسيلي',
+                modal_gps_desc2: 'موروث عالمي ومسارات صحراوية',
+                modal_hotels_title: '🏨 الفنادق والإقامة',
+                modal_hotels_item1: 'فندق الأوراسي / الشيراتون',
+                modal_hotels_desc1: 'إقامة فاخرة بإطلالة بحرية',
+                modal_food_title: '🍽️ المطاعم والمأكولات',
+                modal_food_item1: 'مطاعم القصبة العتيقة',
+                modal_food_desc1: 'أطباق تقليدية جزائرية أصيلة',
+                modal_transport_title: '🚖 خدمات النقل VIP',
+                modal_transport_item1: 'حجز سيارات السياحة والمترو',
+                modal_transport_desc1: 'تنقل ذكي ومستمر',
+                // Responses
+                response_loading: '⏳ جاري تحليل الوجهة ومعالجة الخريطة...',
+                response_success: 'تم تحديث الوجهة إلى {query} بنجاح. استمتع برحلتك الافتراضية!',
+                currency_result: '{amount} {currency} ≈ {total} DZD',
+                modal_speak_gps: 'عرض المعالم والمواقع القريبة',
+                modal_speak_hotels: 'عرض خيارات الإقامة',
+                modal_speak_food: 'عرض خيارات المطاعم',
+                modal_speak_transport: 'عرض خيارات النقل',
+            },
+            en: {
+                heroTitle: 'Explore The World Smartly 🌍',
+                heroSub: '3D Interactive Voice Robot & AI Maps Engine',
+                robotName: 'Voice AI Assistant Robot',
+                robotStatus: 'Ready to speak in English & Arabic 🇬🇧 🇩🇿',
+                aiPlaceholder: 'Ask about a destination: e.g. Tassili, Algiers...',
+                sendBtn: 'Send',
+                voiceLabelOn: 'Voice: On',
+                voiceLabelOff: 'Voice: Off',
+                voiceStop: 'Stop Speech',
+                mapTitle: 'Smart 3D Map (AI Powered)',
+                mapLabel: 'Algiers 3D View',
+                mapBtnSat: 'Satellite 3D',
+                mapBtnStreet: 'Street HD',
+                servicesTitle: 'Interactive Digital Services',
+                m1: 'Landmarks & GPS',
+                m1desc: 'Auto location detection',
+                m2: 'Hotels & Stay',
+                m2desc: 'Custom booking options',
+                m3: 'Local Dining',
+                m3desc: 'Taste & unique experiences',
+                m4: 'Transport',
+                m4desc: 'Buses, cars, and taxis',
+                budgetTitle: 'Budget & Currency Management',
+                converterTitle: 'Smart Currency Converter',
+                calcBtnText: 'Calculate (DZD)',
+                navHome: 'Home',
+                navExplore: 'Explore',
+                navBudget: 'Budget',
+                navAccount: 'Account',
+                modal_gps_title: '📍 Landmarks & Locations',
+                modal_gps_item1: 'Martyrs\' Memorial & El-Hamma Garden',
+                modal_gps_desc1: '3D coordinates and historical tourism',
+                modal_gps_item2: 'Tassili Desert',
+                modal_gps_desc2: 'World heritage and desert trails',
+                modal_hotels_title: '🏨 Hotels & Accommodation',
+                modal_hotels_item1: 'El Aurassi / Sheraton Hotel',
+                modal_hotels_desc1: 'Luxury stay with sea view',
+                modal_food_title: '🍽️ Restaurants & Cuisine',
+                modal_food_item1: 'Casbah Old Restaurants',
+                modal_food_desc1: 'Authentic Algerian traditional dishes',
+                modal_transport_title: '🚖 VIP Transport Services',
+                modal_transport_item1: 'Tourism cars & Metro booking',
+                modal_transport_desc1: 'Smart and continuous mobility',
+                response_loading: '⏳ Analyzing destination and processing map...',
+                response_success: 'Destination updated to {query}. Enjoy your virtual tour!',
+                currency_result: '{amount} {currency} ≈ {total} DZD',
+                modal_speak_gps: 'Showing nearby landmarks and locations',
+                modal_speak_hotels: 'Showing accommodation options',
+                modal_speak_food: 'Showing dining options',
+                modal_speak_transport: 'Showing transport options',
+            }
+        };
+
+        // ============================================================
+        // 2. STATE
+        // ============================================================
         let currentLang = 'ar';
+        let isSpeechEnabled = true;
         let isSatellite = true;
 
-        // Speech Synthesis Engine (AR/EN Voice)
+        // ============================================================
+        // 3. DOM REFS
+        // ============================================================
+        const elements = {
+            heroTitle: document.getElementById('heroTitle'),
+            heroSub: document.getElementById('heroSub'),
+            robotName: document.getElementById('robotName'),
+            robotStatus: document.getElementById('robotStatus'),
+            aiQuery: document.getElementById('aiQuery'),
+            sendBtn: document.querySelector('.ai-input-group button span'),
+            voiceLabel: document.getElementById('voiceLabel'),
+            voiceStopBtn: document.querySelector('.voice-controls .btn-voice:last-child span'),
+            mapTitle: document.getElementById('mapTitle'),
+            mapLocationLabel: document.getElementById('mapLocationLabel'),
+            btnMapMode: document.getElementById('btnMapMode'),
+            servicesTitle: document.getElementById('servicesTitle'),
+            m1: document.getElementById('m1'),
+            m1desc: document.getElementById('m1desc'),
+            m2: document.getElementById('m2'),
+            m2desc: document.getElementById('m2desc'),
+            m3: document.getElementById('m3'),
+            m3desc: document.getElementById('m3desc'),
+            m4: document.getElementById('m4'),
+            m4desc: document.getElementById('m4desc'),
+            budgetTitle: document.getElementById('budgetTitle'),
+            converterTitle: document.querySelector('.calc-card h4 span'),
+            calcBtnText: document.getElementById('calcBtnText'),
+            navHome: document.getElementById('navHome'),
+            navExplore: document.getElementById('navExplore'),
+            navBudget: document.getElementById('navBudget'),
+            navAccount: document.getElementById('navAccount'),
+            modalTitle: document.getElementById('modalTitle'),
+        };
+
+        // ============================================================
+        // 4. APPLY LANGUAGE
+        // ============================================================
+        function applyLanguage(lang) {
+            const t = translations[lang];
+            if (!t) return;
+
+            // Hero
+            elements.heroTitle.innerText = t.heroTitle;
+            elements.heroSub.innerText = t.heroSub;
+
+            // Robot
+            elements.robotName.innerText = t.robotName;
+            elements.robotStatus.innerText = t.robotStatus;
+            elements.aiQuery.placeholder = t.aiPlaceholder;
+            elements.sendBtn.innerText = t.sendBtn;
+            elements.voiceLabel.innerText = isSpeechEnabled ? t.voiceLabelOn : t.voiceLabelOff;
+            // voiceStop button text is static but we can update
+            document.querySelector('.voice-controls .btn-voice:last-child').innerHTML =
+                `<i class="fa-solid fa-circle-stop"></i> ${t.voiceStop}`;
+
+            // Map
+            elements.mapTitle.innerText = t.mapTitle;
+            elements.mapLocationLabel.innerText = t.mapLabel;
+            elements.btnMapMode.innerText = isSatellite ? t.mapBtnSat : t.mapBtnStreet;
+
+            // Services
+            elements.servicesTitle.innerText = t.servicesTitle;
+            elements.m1.innerText = t.m1;
+            elements.m1desc.innerText = t.m1desc;
+            elements.m2.innerText = t.m2;
+            elements.m2desc.innerText = t.m2desc;
+            elements.m3.innerText = t.m3;
+            elements.m3desc.innerText = t.m3desc;
+            elements.m4.innerText = t.m4;
+            elements.m4desc.innerText = t.m4desc;
+
+            // Budget
+            elements.budgetTitle.innerText = t.budgetTitle;
+            elements.converterTitle.innerText = t.converterTitle;
+            elements.calcBtnText.innerText = t.calcBtnText;
+
+            // Nav
+            elements.navHome.querySelector('span').innerText = t.navHome;
+            elements.navExplore.querySelector('span').innerText = t.navExplore;
+            elements.navBudget.querySelector('span').innerText = t.navBudget;
+            elements.navAccount.querySelector('span').innerText = t.navAccount;
+
+            // Store translations for modal and other dynamic parts
+            window._translations = t;
+        }
+
+        // ============================================================
+        // 5. LANGUAGE SWITCHER (without auto-speech)
+        // ============================================================
+        function switchLanguage() {
+            const newLang = document.getElementById('langSelect').value;
+            if (newLang === currentLang) return;
+            currentLang = newLang;
+            applyLanguage(currentLang);
+            // Do NOT speak automatically – Safari restriction
+        }
+
+        // ============================================================
+        // 6. SPEECH FUNCTIONS (with Safari-safe activation)
+        // ============================================================
         function speakText(text, lang = currentLang) {
             if (!isSpeechEnabled || !('speechSynthesis' in window)) return;
+            // Cancel any ongoing speech
+            window.speechSynthesis.cancel();
 
-            window.speechSynthesis.cancel(); // Stop current speech
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = lang === 'ar' ? 'ar-SA' : 'en-US';
             utterance.pitch = 1.0;
@@ -603,14 +902,16 @@
             const avatar = document.getElementById('robotAvatar');
             utterance.onstart = () => avatar.classList.add('speaking');
             utterance.onend = () => avatar.classList.remove('speaking');
+            utterance.onerror = () => avatar.classList.remove('speaking');
 
             window.speechSynthesis.speak(utterance);
         }
 
         function toggleSpeech() {
             isSpeechEnabled = !isSpeechEnabled;
-            const btnLabel = document.getElementById('voiceLabel');
-            btnLabel.innerText = isSpeechEnabled ? 'الصوت التفاعلي: مفعل' : 'الصوت التفاعلي: معطل';
+            const t = window._translations || translations[currentLang];
+            const label = document.getElementById('voiceLabel');
+            label.innerText = isSpeechEnabled ? t.voiceLabelOn : t.voiceLabelOff;
             if (!isSpeechEnabled) stopSpeech();
         }
 
@@ -619,129 +920,181 @@
             document.getElementById('robotAvatar').classList.remove('speaking');
         }
 
-        // AI Robot Query Execution & Auto Map Update
+        // ============================================================
+        // 7. AI QUERY (with loading state and map update)
+        // ============================================================
+        function updateMap(query) {
+            const mapFrame = document.getElementById('gmapFrame');
+            const mapTypeParam = isSatellite ? '&t=k' : '';
+            mapFrame.src =
+                `https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=15${mapTypeParam}&ie=UTF8&iwloc=&output=embed`;
+            const t = window._translations || translations[currentLang];
+            document.getElementById('mapLocationLabel').innerText = `${query} (${t.mapLabel.split(' ').slice(1).join(' ') || '3D View'})`;
+        }
+
         function askAIAndSpeak() {
             const query = document.getElementById('aiQuery').value.trim();
             const res = document.getElementById('aiResponse');
             if (!query) return;
 
+            const t = window._translations || translations[currentLang];
+
+            // Show loading state
             res.style.display = 'block';
-            
-            let responseText = "";
-            let mapLocation = query;
+            res.innerText = t.response_loading;
+            res.style.color = '#fbbf24';
+            res.style.borderColor = 'rgba(251, 191, 36, 0.3)';
 
-            if (currentLang === 'ar') {
-                responseText = `مرحباً بك! يقوم روبوت AI GLOBAL TOURISM بتحليل إحداثيات ${query}. أهلاً بك في الجزائر، تم تحديث خريطة الـ 3D بالوجهة المطلوبة.`;
-            } else {
-                responseText = `Welcome! AI GLOBAL TOURISM robot is analyzing coordinates for ${query}. Destination updated on the 3D map.`;
-            }
+            // Simulate processing
+            setTimeout(() => {
+                const responseText = t.response_success.replace('{query}', query);
+                res.innerText = responseText;
+                res.style.color = '#4ade80';
+                res.style.borderColor = 'rgba(16, 185, 129, 0.3)';
 
-            res.innerText = responseText;
-            speakText(responseText);
+                // Speak the response (user interaction already happened)
+                speakText(responseText);
 
-            // Update Google Maps Location dynamically in 3D Perspective
-            const mapFrame = document.getElementById('gmapFrame');
-            const mapTypeParam = isSatellite ? '&t=k' : '';
-            mapFrame.src = `https://maps.google.com/maps?q=${encodeURIComponent(mapLocation)}&z=15${mapTypeParam}&ie=UTF8&iwloc=&output=embed`;
-            document.getElementById('mapLocationLabel').innerText = `${query} (3D View)`;
+                // Update map
+                updateMap(query);
+            }, 500);
         }
 
+        // ============================================================
+        // 8. MAP MODE TOGGLE
+        // ============================================================
         function toggleMapMode() {
             isSatellite = !isSatellite;
+            const t = window._translations || translations[currentLang];
             const btn = document.getElementById('btnMapMode');
-            btn.innerText = isSatellite ? 'وضع الساتلايت 3D' : 'وضع الشوارع HD';
-            const query = document.getElementById('aiQuery').value.trim() || "Algiers,Algeria";
-            const mapFrame = document.getElementById('gmapFrame');
-            const mapTypeParam = isSatellite ? '&t=k' : '';
-            mapFrame.src = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=15${mapTypeParam}&ie=UTF8&iwloc=&output=embed`;
+            btn.innerText = isSatellite ? t.mapBtnSat : t.mapBtnStreet;
+            const query = document.getElementById('aiQuery').value.trim() || 'Algiers,Algeria';
+            updateMap(query);
         }
 
-        // Language Switcher
-        function switchLanguage() {
-            currentLang = document.getElementById('langSelect').value;
-            if (currentLang === 'en') {
-                document.getElementById('heroTitle').innerText = "Explore The World Smartly 🌍";
-                document.getElementById('heroSub').innerText = "3D Interactive Voice Robot & AI Maps Engine";
-                document.getElementById('robotName').innerText = "Voice AI Assistant Robot";
-                document.getElementById('robotStatus').innerText = "Ready to speak in English & Arabic 🇬🇧 🇩🇿";
-                document.getElementById('aiQuery').placeholder = "Ask about a destination: e.g. Tassili, Algiers...";
-                speakText("Language switched to English. How can I assist your trip today?", 'en');
-            } else {
-                document.getElementById('heroTitle').innerText = "استكشف العالم بذكاء 🌍";
-                document.getElementById('heroSub').innerText = "المرشد الصوتي المتكلم 3D وخرائط الذكاء الاصطناعي";
-                document.getElementById('robotName').innerText = "الروبوت الذكي المساعد (Voice AI)";
-                document.getElementById('robotStatus').innerText = "جاهز للتحدث والاستماع باللغتين 🇩🇿 🇬🇧";
-                document.getElementById('aiQuery').placeholder = "اسأل عن وجهة: مثال: مقام الشهيد، التاسيلي...";
-                speakText("تم تغيير اللغة إلى العربية. كيف يمكنني مساعدتك في رحلتك اليوم؟", 'ar');
-            }
-        }
-
-        // Modal Details
+        // ============================================================
+        // 9. MODAL SYSTEM (with dynamic content and speech)
+        // ============================================================
         const serviceData = {
             gps: {
-                title: '<i class="fa-solid fa-map-location-dot"></i> المعالم والمواقع',
+                key: 'gps',
+                titleKey: 'modal_gps_title',
                 items: [
-                    { title: 'مقام الشهيد & حديقة الحامة', desc: 'إحداثيات 3D وسياحة تاريخية', icon: 'fa-monument' },
-                    { title: 'صحراء التاسيلي', desc: 'موروث عالمي ومسارات صحراوية', icon: 'fa-mountain-sun' }
-                ]
+                    { titleKey: 'modal_gps_item1', descKey: 'modal_gps_desc1', icon: 'fa-monument' },
+                    { titleKey: 'modal_gps_item2', descKey: 'modal_gps_desc2', icon: 'fa-mountain-sun' }
+                ],
+                speakKey: 'modal_speak_gps'
             },
             hotels: {
-                title: '<i class="fa-solid fa-hotel"></i> الفنادق والإقامة',
+                key: 'hotels',
+                titleKey: 'modal_hotels_title',
                 items: [
-                    { title: 'فندق الأوراسي / الشيراتون', desc: 'إقامة فاخرة بإطلالة بحرية', icon: 'fa-star' }
-                ]
+                    { titleKey: 'modal_hotels_item1', descKey: 'modal_hotels_desc1', icon: 'fa-star' }
+                ],
+                speakKey: 'modal_speak_hotels'
             },
             food: {
-                title: '<i class="fa-solid fa-utensils"></i> المطاعم والمأكولات',
+                key: 'food',
+                titleKey: 'modal_food_title',
                 items: [
-                    { title: 'مطاعم القصبة العتيقة', desc: 'أطباق تقليدية جزائرية أصيلة', icon: 'fa-bowl-food' }
-                ]
+                    { titleKey: 'modal_food_item1', descKey: 'modal_food_desc1', icon: 'fa-bowl-food' }
+                ],
+                speakKey: 'modal_speak_food'
             },
             transport: {
-                title: '<i class="fa-solid fa-taxi"></i> خدمات النقل VIP',
+                key: 'transport',
+                titleKey: 'modal_transport_title',
                 items: [
-                    { title: 'حجز سيارات السياحة والمترو', desc: 'تنقل ذكي ومستمر', icon: 'fa-car' }
-                ]
+                    { titleKey: 'modal_transport_item1', descKey: 'modal_transport_desc1', icon: 'fa-car' }
+                ],
+                speakKey: 'modal_speak_transport'
             }
         };
 
         function openModal(type) {
             const data = serviceData[type];
             if (!data) return;
-            document.getElementById('modalTitle').innerHTML = data.title;
+            const t = window._translations || translations[currentLang];
+
+            // Set title
+            const titleText = t[data.titleKey] || 'تفاصيل الخدمة';
+            document.getElementById('modalTitle').innerHTML = `<i class="fa-solid fa-star"></i> ${titleText}`;
+
+            // Build items
             const modalBody = document.getElementById('modalBody');
-            modalBody.innerHTML = data.items.map(item => `
-                <div style="background:var(--glass-bg); border:1px solid var(--glass-border); padding:12px; border-radius:14px; display:flex; align-items:center; gap:12px;">
-                    <i class="fa-solid ${item.icon}" style="font-size:1.3rem; color:var(--accent-emerald);"></i>
-                    <div>
-                        <h5 style="font-size:0.9rem;">${item.title}</h5>
-                        <p style="font-size:0.75rem; color:var(--text-muted);">${item.desc}</p>
+            modalBody.innerHTML = data.items.map(item => {
+                const itemTitle = t[item.titleKey] || item.titleKey;
+                const itemDesc = t[item.descKey] || item.descKey;
+                return `
+                    <div style="background:var(--glass-bg); border:1px solid var(--glass-border); padding:12px; border-radius:14px; display:flex; align-items:center; gap:12px;">
+                        <i class="fa-solid ${item.icon}" style="font-size:1.3rem; color:var(--accent-emerald);"></i>
+                        <div>
+                            <h5 style="font-size:0.9rem;">${itemTitle}</h5>
+                            <p style="font-size:0.75rem; color:var(--text-muted);">${itemDesc}</p>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
+
+            // Show modal
             document.getElementById('serviceModal').classList.add('active');
-            speakText(type === 'gps' ? "عرض المعالم والمواقع القريبة" : "عرض خيارات الخدمة المطلوبة");
+
+            // Speak (user interaction)
+            const speakMsg = t[data.speakKey] || 'عرض الخدمة';
+            speakText(speakMsg);
         }
 
         function closeModal() {
             document.getElementById('serviceModal').classList.remove('active');
+            stopSpeech();
         }
 
         function closeModalOnOuter(e) {
             if (e.target.classList.contains('modal-overlay')) closeModal();
         }
 
+        // ============================================================
+        // 10. CURRENCY CONVERTER
+        // ============================================================
         function convertCurrency() {
             const amount = parseFloat(document.getElementById('foreignAmount').value) || 0;
             const type = document.getElementById('currencyType').value;
-            let rate = 240; 
+            let rate = 240;
             if (type === 'USD') rate = 220;
             if (type === 'GBP') rate = 270;
             const total = amount * rate;
-            const resText = `${amount} ${type} ≈ ${total.toLocaleString()} DZD`;
-            document.getElementById('calcResult').innerText = resText;
-            speakText(resText);
+            const t = window._translations || translations[currentLang];
+            const resultText = t.currency_result
+                .replace('{amount}', amount)
+                .replace('{currency}', type)
+                .replace('{total}', total.toLocaleString());
+            document.getElementById('calcResult').innerText = resultText;
+            speakText(resultText);
         }
+
+        // ============================================================
+        // 11. INITIALIZATION
+        // ============================================================
+        // Apply default language (Arabic) without speech
+        applyLanguage('ar');
+        // Set the select to Arabic
+        document.getElementById('langSelect').value = 'ar';
+        // Do NOT call speakText on load – Safari would block it.
+
+        // Allow user to click the send button to start speech interactions.
+
+        // ============================================================
+        // 12. KEYBOARD SUPPORT (press Enter to send)
+        // ============================================================
+        document.getElementById('aiQuery').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                askAIAndSpeak();
+            }
+        });
+
+        console.log('✅ AI GLOBAL TOURISM loaded successfully.');
+        console.log('ℹ️  Speech synthesis is activated only after user interaction (click).');
     </script>
 </body>
-</html>
+    </html>
