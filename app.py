@@ -1,6 +1,6 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, request, jsonify
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', template_folder='templates')
 
 @app.route('/')
 def home():
@@ -8,9 +8,10 @@ def home():
 
 @app.route('/api/ai-process', methods=['POST'])
 def ai_process():
-    data = request.json or {}
+    data = request.get_json() or {}
     query = data.get('query', '')
-    # يمكنك وضع منطق الذكاء الاصطناعي هنا
-    return jsonify({"reply": f"الروبوت حلل: {query} بنجاح."})
+    reply = f"مرحباً بك! لقد استلمت وجهتك: {query}. جاري إعداد التقرير السياحي..."
+    return jsonify({'reply': reply})
 
-# لا تضع app.run هنا! Vercel سيتولى التشغيل تلقائياً.
+if __name__ == '__main__':
+    app.run(debug=True)
