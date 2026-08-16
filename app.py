@@ -132,157 +132,6 @@ SINGLE_FILE_HTML = """
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
         .modal-content { background: var(--glass-modal); border: 1px solid var(--accent-cyan); width: 100%; max-width: 600px; margin: 0 auto; border-radius: 28px 28px 0 0; padding: 22px 18px 30px 18px; transform: translateY(100%); transition: 0.35s; }
         .modal-overlay.active .modal-content { transform: translateY(0); }
-
-        /* ===== NEW WALLET SCREEN (Biometric Phone + Glassmorphic) ===== */
-        .wallet-phone {
-            background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.18);
-            border-radius: 40px;
-            padding: 20px 16px 30px 16px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.8), inset 0 0 30px rgba(6,182,212,0.15);
-            margin: 14px auto;
-            max-width: 340px;
-            position: relative;
-            transition: transform 0.3s;
-        }
-        .wallet-phone::before {
-            content: '';
-            position: absolute;
-            top: 8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 5px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 20px;
-        }
-        .wallet-phone .phone-notch {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 150px;
-            height: 28px;
-            background: rgba(0,0,0,0.7);
-            border-radius: 0 0 20px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-top: none;
-        }
-        .wallet-phone .phone-notch i {
-            font-size: 0.8rem;
-            color: #fff;
-        }
-        .wallet-phone .biometric-icon {
-            display: flex;
-            justify-content: center;
-            margin: 18px 0 10px;
-            font-size: 2.2rem;
-            color: var(--accent-cyan);
-            text-shadow: 0 0 20px var(--accent-cyan);
-        }
-        .wallet-phone .account-number {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 16px;
-            padding: 12px;
-            margin: 8px 0;
-            text-align: center;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            letter-spacing: 1px;
-            backdrop-filter: blur(8px);
-            direction: ltr;
-        }
-        .wallet-phone .account-number span {
-            color: var(--text-main);
-            font-weight: 600;
-        }
-        .wallet-phone .balance-box {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 16px;
-            padding: 10px 16px;
-            margin: 10px 0;
-        }
-        .wallet-phone .balance-box .label {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
-        .wallet-phone .balance-box .amount {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: var(--accent-emerald);
-        }
-        .wallet-phone .card-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin: 12px 0;
-        }
-        .wallet-phone .card-item {
-            background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,215,0,0.05));
-            border: 1px solid rgba(255,215,0,0.2);
-            border-radius: 16px;
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            backdrop-filter: blur(8px);
-        }
-        .wallet-phone .card-item .card-info {
-            display: flex;
-            flex-direction: column;
-        }
-        .wallet-phone .card-item .card-info .card-type {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
-        .wallet-phone .card-item .card-info .card-number {
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            color: var(--text-main);
-        }
-        .wallet-phone .card-item .card-icon {
-            font-size: 1.4rem;
-            color: var(--accent-gold);
-        }
-        .wallet-phone .glass-btn {
-            background: rgba(255,255,255,0.06);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 30px;
-            padding: 12px;
-            width: 100%;
-            color: #fff;
-            font-weight: 700;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-top: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .wallet-phone .glass-btn:hover {
-            background: rgba(255,255,255,0.12);
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 25px rgba(6,182,212,0.2);
-        }
-        .wallet-phone .glass-btn.primary {
-            background: linear-gradient(135deg, rgba(6,182,212,0.2), rgba(139,92,246,0.2));
-            border-color: var(--accent-cyan);
-        }
     </style>
 </head>
 <body>
@@ -427,69 +276,6 @@ SINGLE_FILE_HTML = """
             </div>
         </section>
 
-        <!-- ========== SCREEN 5: BIOMETRIC DIGITAL WALLET (NEW) ========== -->
-        <section id="screen-wallet" class="app-screen">
-            <div style="padding: 12px 0;">
-                <h2 id="walletTitle">المحفظة الرقمية البيومترية 📱</h2>
-            </div>
-
-            <div class="wallet-phone">
-                <!-- iPhone-style notch -->
-                <div class="phone-notch">
-                    <i class="fa-solid fa-camera"></i>
-                    <i class="fa-solid fa-microphone"></i>
-                    <i class="fa-solid fa-volume-high"></i>
-                </div>
-
-                <!-- Biometric AI Icon -->
-                <div class="biometric-icon">
-                    <i class="fa-solid fa-fingerprint" style="animation: pulse 2s infinite;"></i>
-                </div>
-
-                <!-- Account Number -->
-                <div class="account-number">
-                    <div style="font-size:0.65rem; margin-bottom:4px;">IBAN / حساب رقمي عالمي</div>
-                    <span id="walletIban">DZ 1234 5678 9012 3456 7890</span>
-                </div>
-
-                <!-- Digital Balance -->
-                <div class="balance-box">
-                    <span class="label">💰 الرصيد الرقمي</span>
-                    <span class="amount" id="walletBalance">$ 12,450.00</span>
-                </div>
-
-                <!-- Visa Platinum Cards -->
-                <div class="card-grid">
-                    <div class="card-item">
-                        <div class="card-info">
-                            <span class="card-type">💳 فيزا بلاتينيوم</span>
-                            <span class="card-number">•••• 4521  **** 1234</span>
-                        </div>
-                        <i class="fa-regular fa-credit-card card-icon"></i>
-                    </div>
-                    <div class="card-item">
-                        <div class="card-info">
-                            <span class="card-type">💳 فيزا بلاتينيوم (ذهبية)</span>
-                            <span class="card-number">•••• 6789  **** 5678</span>
-                        </div>
-                        <i class="fa-regular fa-gem card-icon" style="color:var(--accent-gold);"></i>
-                    </div>
-                </div>
-
-                <!-- Action Buttons (Glassmorphic) -->
-                <button class="glass-btn primary" onclick="scanBiometric()">
-                    <i class="fa-solid fa-face-id"></i> <span id="scanBiometricBtn">مسح بيومتري (Face ID)</span>
-                </button>
-                <button class="glass-btn" onclick="showWalletDetails()">
-                    <i class="fa-solid fa-wallet"></i> <span id="walletDetailsBtn">عرض تفاصيل المحفظة</span>
-                </button>
-            </div>
-
-            <div style="text-align:center; font-size:0.7rem; color:var(--text-muted); margin-top:8px;">
-                <i class="fa-solid fa-lock"></i> حماية بتقنية الذكاء الاصطناعي المتقدم • تشفير شامل
-            </div>
-        </section>
-
     </div>
 
     <!-- Modal Overlay -->
@@ -507,84 +293,25 @@ SINGLE_FILE_HTML = """
     <nav class="bottom-nav">
         <button class="nav-item active" onclick="switchTab('home', this)">
             <i class="fa-solid fa-vr-cardboard"></i>
-            <span id="navHome">الرئيسية</span>
+            <span>الرئيسية</span>
         </button>
         <button class="nav-item" onclick="switchTab('innovations', this)">
             <i class="fa-solid fa-rocket"></i>
-            <span id="navInnovations">الابتكارات</span>
+            <span>الابتكارات</span>
         </button>
         <button class="nav-item" onclick="switchTab('passport', this)">
             <i class="fa-solid fa-passport"></i>
-            <span id="navPassport">الجواز</span>
+            <span>الجواز والأمان</span>
         </button>
         <button class="nav-item" onclick="switchTab('profile', this)">
             <i class="fa-solid fa-microphone"></i>
-            <span id="navProfile">الصوت الحي</span>
-        </button>
-        <!-- NEW WALLET TAB -->
-        <button class="nav-item" onclick="switchTab('wallet', this)">
-            <i class="fa-solid fa-wallet"></i>
-            <span id="navWallet">المحفظة</span>
+            <span>الصوت الحي</span>
         </button>
     </nav>
 
     <script>
-        // ============================================================
-        // TRANSLATIONS (FULL with new wallet keys)
-        // ============================================================
-        const translations = {
-            ar: {
-                // Existing keys (kept for brevity, but we'll include all)
-                robotName: 'الروبوت السياحي الهولوغرامي العالمي',
-                robotStatus: '● دعم صوتي حي بجميع اللغات & WebRTC',
-                aiPlaceholder: 'اسأل الروبوت أو ابحث عن أي موقع عالمي...',
-                // ... all existing keys ...
-                // New wallet keys
-                walletTitle: 'المحفظة الرقمية البيومترية 📱',
-                scanBiometricBtn: 'مسح بيومتري (Face ID)',
-                walletDetailsBtn: 'عرض تفاصيل المحفظة',
-                navWallet: 'المحفظة',
-                walletBalance: '$ 12,450.00',
-                walletIban: 'DZ 1234 5678 9012 3456 7890',
-                // ... other keys needed
-            },
-            en: {
-                // ... English translations ...
-                walletTitle: 'Biometric Digital Wallet 📱',
-                scanBiometricBtn: 'Scan Biometric (Face ID)',
-                walletDetailsBtn: 'Show Wallet Details',
-                navWallet: 'Wallet',
-                walletBalance: '$ 12,450.00',
-                walletIban: 'DZ 1234 5678 9012 3456 7890',
-            },
-            fr: {
-                // ... French translations ...
-                walletTitle: 'Portefeuille numérique biométrique 📱',
-                scanBiometricBtn: 'Scanner biométrique (Face ID)',
-                walletDetailsBtn: 'Afficher les détails du portefeuille',
-                navWallet: 'Portefeuille',
-                walletBalance: '$ 12,450.00',
-                walletIban: 'DZ 1234 5678 9012 3456 7890',
-            }
-        };
-
-        // ============================================================
-        // GLOBAL VARIABLES & FUNCTIONS (existing)
-        // ============================================================
-        let currentLang = 'ar';
         let isSpeechEnabled = true;
-
-        function speakText(text, lang = currentLang) {
-            if (!isSpeechEnabled || !('speechSynthesis' in window)) return;
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = lang === 'fr' ? 'fr-FR' : (lang === 'en' ? 'en-US' : 'ar-SA');
-            utterance.pitch = 1.0; utterance.rate = 0.95;
-            const avatar = document.getElementById('robotAvatar');
-            utterance.onstart = () => avatar.classList.add('speaking');
-            utterance.onend = () => avatar.classList.remove('speaking');
-            window.speechSynthesis.speak(utterance);
-        }
+        let currentLang = 'ar';
 
         function switchTab(screenId, btnElement) {
             document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
@@ -593,50 +320,49 @@ SINGLE_FILE_HTML = """
             btnElement.classList.add('active');
         }
 
-        // ============================================================
-        // NEW WALLET FUNCTIONS
-        // ============================================================
-        function scanBiometric() {
-            speakText('جاري المسح البيومتري باستخدام الذكاء الاصطناعي...');
-            alert('🔐 تم التحقق البيومتري بنجاح! (Face ID / بصمة الإصبع)');
+        function speakText(text, lang = currentLang) {
+            if (!isSpeechEnabled || !('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = lang === 'fr' ? 'fr-FR' : (lang === 'en' ? 'en-US' : 'ar-SA');
+            utterance.pitch = 1.0; utterance.rate = 0.95;
+
+            const avatar = document.getElementById('robotAvatar');
+            utterance.onstart = () => avatar.classList.add('speaking');
+            utterance.onend = () => avatar.classList.remove('speaking');
+            window.speechSynthesis.speak(utterance);
         }
 
-        function showWalletDetails() {
-            const details = `
-                💳 رقم الحساب: DZ 1234 5678 9012 3456 7890
-                💰 الرصيد: $12,450.00
-                🏦 البطاقات: فيزا بلاتينيوم (2 بطاقات)
-                🔒 مستوى التشفير: 256-bit AI
-            `;
-            alert(details);
-            speakText('عرض تفاصيل المحفظة الرقمية');
-        }
-
-        // Other existing functions: askAIAndSpeak, loadRegion, connectSmartScreen, runAITwin, toggleARMode, triggerEmergency, translateLive, switchLanguage, openModal, closeModal, etc.
-        // They are already defined above. For brevity, I'll include placeholder comments and assume they exist.
-        // In the actual code, we need to include all these functions. Since the user wants everything in one file, we'll include them fully.
-
-        // ============================================================
-        // PLACEHOLDER FOR OTHER FUNCTIONS (they are already in the HTML)
-        // For the sake of completeness, we'll include them below.
-        // ============================================================
-        function askAIAndSpeak() {
+        async function askAIAndSpeak() {
             const query = document.getElementById('aiQuery').value.trim();
             if (!query) return;
+
             const res = document.getElementById('aiResponse');
             res.style.display = 'block';
-            res.innerText = '⏳ جاري تحليل الوجهة...';
-            setTimeout(() => {
-                const reply = `تم تحديث الوجهة إلى ${query}. استمتع برحلتك الافتراضية!`;
-                res.innerText = reply;
-                speakText(reply);
+
+            try {
+                const response = await fetch('/api/ai-process', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: query, lang: currentLang })
+                });
+                const data = await response.json();
+                
+                res.innerText = data.reply;
+                speakText(data.reply);
                 document.getElementById('gmapFrame').src = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=12&t=k&ie=UTF8&iwloc=&output=embed`;
-            }, 500);
+            } catch (err) {
+                let msg = `الروبوت الهولوغرامي يحلل الموقع العالمي: ${query}. تم عرض الخريطة والملاحة الفضائية 3D.`;
+                res.innerText = msg;
+                speakText(msg);
+                document.getElementById('gmapFrame').src = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=12&t=k&ie=UTF8&iwloc=&output=embed`;
+            }
         }
 
         function loadRegion(region, pillElem) {
             document.querySelectorAll('.region-pill').forEach(p => p.classList.remove('active'));
             pillElem.classList.add('active');
+            
             const regionMaps = {
                 dz: 'https://maps.google.com/maps?q=Algeria&t=k&z=6&ie=UTF8&iwloc=&output=embed',
                 africa: 'https://maps.google.com/maps?q=Africa&t=k&z=3&ie=UTF8&iwloc=&output=embed',
@@ -644,31 +370,32 @@ SINGLE_FILE_HTML = """
                 america: 'https://maps.google.com/maps?q=Americas&t=k&z=3&ie=UTF8&iwloc=&output=embed',
                 global: 'https://maps.google.com/maps?q=World&t=k&z=2&ie=UTF8&iwloc=&output=embed'
             };
+
             document.getElementById('gmapFrame').src = regionMaps[region] || regionMaps['global'];
-            speakText(`تم عرض خريطة ${pillElem.innerText}`);
+            speakText(`تم عرض خريطة قارة ${pillElem.innerText}`);
         }
 
         function connectSmartScreen() {
-            speakText('جاري الاقتران ببروتوكول الشاشات الذكية...');
-            alert('📺 تم الربط مع الشاشات القريبة.');
+            speakText("جاري الاقتران ببروتوكول الشاشات الذكية متعدد الصوت والواقع المعزز عبر WebRTC");
+            alert("📺 تم الربط مع الشاشات القريبة والسيارات المجاورة للبث الصوتي والملاحة التفاعلية!");
         }
 
         function runAITwin() {
             const res = document.getElementById('aiResponse');
             res.style.display = 'block';
-            const twinPlan = 'النسخة الرقمية AI Twin: تم تحضير الرحلة النموذجية عبر الجزائر وخارجها.';
+            const twinPlan = "النسخة الرقمية AI Twin: تم تحضير الرحلة النموذجية عبر الجزائر وخارجها بالميزانية المحددة والربط المالي ببطاقة CPAY ROBOT AI.";
             res.innerText = twinPlan;
-            speakText('تم تشغيل النسخة الرقمية الذكية بنجاح.');
+            speakText("تم تشغيل النسخة الرقمية الذكية بنجاح وتوليد المسار التلقائي");
         }
 
         function toggleARMode() {
-            speakText('تم تفعيل وضع الواقع المعزز الهولوغرامي AR');
-            alert('✨ وضع AR مفعل.');
+            speakText("تم تفعيل وضع الواقع المعزز الهولوغرامي AR");
+            alert("✨ وضع الواقع المعزز AR يعمل الآن عبر الكاميرا التفاعلية!");
         }
 
         function triggerEmergency() {
-            speakText('تم تنشيط زر SOS المباشر.');
-            alert('🚨 تم إرسال إشارة SOS العالمية.');
+            speakText("تم تنشيط زر SOS المباشر وتحديد إحداثيات المستشفيات والشرطة السياحية فوراً");
+            alert("🚨 تم إرسال إشارة SOS العالمية للمراكز القريبة!");
         }
 
         function translateLive() {
@@ -681,27 +408,34 @@ SINGLE_FILE_HTML = """
 
         function switchLanguage() {
             currentLang = document.getElementById('langSelect').value;
-            // Apply translations for all UI elements (simplified)
-            const t = translations[currentLang];
-            if (!t) return;
-            // Update wallet specific texts
-            document.getElementById('walletTitle').innerText = t.walletTitle || 'المحفظة الرقمية';
-            document.getElementById('scanBiometricBtn').innerText = t.scanBiometricBtn || 'مسح بيومتري';
-            document.getElementById('walletDetailsBtn').innerText = t.walletDetailsBtn || 'عرض التفاصيل';
-            document.getElementById('navWallet').innerText = t.navWallet || 'المحفظة';
-            document.getElementById('walletBalance').innerText = t.walletBalance || '$ 12,450.00';
-            document.getElementById('walletIban').innerText = t.walletIban || 'DZ 1234 5678 9012 3456 7890';
-            // Also update other UI elements as needed (home, innovations, etc.)
-            // For brevity, we assume other labels are updated similarly.
-            speakText(currentLang === 'ar' ? 'تم تغيير اللغة' : (currentLang === 'en' ? 'Language changed' : 'Langue changée'));
+            speakText(currentLang === 'fr' ? "Langue internationale changée" : (currentLang === 'en' ? "Global Language set to English" : "تم تمكين الصوت باللغة العربية"));
         }
 
-        // Modal functions
         const serviceData = {
-            hospitals: { title: '🏥 المستشفيات', items: [{ title: 'مستشفى الجامعة', desc: 'طوارئ 24/7', icon: 'fa-hospital' }] },
-            flights: { title: '✈️ الطيران', items: [{ title: 'مطار دولي', desc: 'حجز وتتبع', icon: 'fa-plane' }] },
-            ferry: { title: '⛴️ البواخر', items: [{ title: 'ميناء', desc: 'رحلات بحرية', icon: 'fa-ship' }] },
-            stations: { title: '🚍 المحطات', items: [{ title: 'محطة مركزية', desc: 'مواعيد النقل', icon: 'fa-bus' }] }
+            hospitals: {
+                title: '🏥 المستشفيات والطوارئ العالمية',
+                items: [
+                    { title: 'شبكة الطوارئ الطبية الرقمية 24/7', desc: 'إسعاف سريع وملاحة جوية طبية', icon: 'fa-hospital' }
+                ]
+            },
+            flights: {
+                title: '✈️ خطوط الطيران والرحلات الدولية',
+                items: [
+                    { title: 'محجوزات الطيران العالمي والداخلي', desc: 'تذاكر فورية ومتابعة المتاع بـ AI', icon: 'fa-plane' }
+                ]
+            },
+            ferry: {
+                title: '⛴️ البواخر والموانئ البحرية',
+                items: [
+                    { title: 'خطوط البواخر البحرية الجزائرية والعالمية', desc: 'مواعيد الرحلات واليخوت', icon: 'fa-ship' }
+                ]
+            },
+            stations: {
+                title: '🚍 المحطات والنقل الذكي المتكامل',
+                items: [
+                    { title: 'محطات الحافلات والقطارات فائقة السرعة', desc: 'دفع رقمي عبر CPAY ROBOT AI', icon: 'fa-bus' }
+                ]
+            }
         };
 
         function openModal(type) {
@@ -722,24 +456,8 @@ SINGLE_FILE_HTML = """
             speakText(`عرض ${data.title}`);
         }
 
-        function closeModal() {
-            document.getElementById('serviceModal').classList.remove('active');
-        }
-        function closeModalOnOuter(e) {
-            if (e.target.classList.contains('modal-overlay')) closeModal();
-        }
-
-        // Keyboard events
-        document.getElementById('aiQuery').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') askAIAndSpeak();
-        });
-        document.getElementById('transInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') translateLive();
-        });
-
-        // Init
-        switchLanguage(); // apply initial language
-        console.log('✅ CPAY ROBOT AI V5 with Biometric Wallet loaded.');
+        function closeModal() { document.getElementById('serviceModal').classList.remove('active'); }
+        function closeModalOnOuter(e) { if (e.target.classList.contains('modal-overlay')) closeModal(); }
     </script>
 </body>
 </html>
