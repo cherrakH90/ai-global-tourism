@@ -2,14 +2,28 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>CPAY ROBOT AI V5</title>
-    <!-- استدعاء ملف الـ CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Digital Tourism - المرشد السياحي الذكي</title>
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <!-- محتوى الصفحة هنا -->
-    
-    <!-- استدعاء ملف الـ JS -->
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <header>
+        <h1>🌍 AI Digital Tourism</h1>
+        <p>منصة السياحة الرقمية الذكية للاستكشاف والتوجيه</p>
+    </header>
+
+    <div class="main-container">
+        <div class="search-box">
+            <input type="text" id="aiQuery" placeholder="أدخل اسم المدينة أو الوجهة السياحية...">
+            <button onclick="askAI()">استكشف</button>
+        </div>
+
+        <div id="aiResponse" class="response-area">
+            أهلاً بك! اكتب وجهتك السياحية للبدء في الاستكشاف.
+        </div>
+    </div>
+
+    <script src="/static/js/main.js"></script>
 </body>
 </html>
