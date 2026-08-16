@@ -1,11 +1,15 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template_string, request, jsonify, session
 import os
 import sys
+import json
+import random
+import re
 
 # ============================================================
 # إنشاء تطبيق Flask
 # ============================================================
 app = Flask(__name__)
+app.secret_key = os.urandom(24)  # للمعالجة الجلسات
 
 # ============================================================
 # (اختياري) إجبار إيقاف الخادم القديم على المنفذ 7000
@@ -16,22 +20,1563 @@ elif sys.platform.startswith('win'):
     os.system("for /f \"tokens=5\" %a in ('netstat -aon ^| findstr :7000') do taskkill /f /pid %a >nul 2>&1")
 
 # ============================================================
+# بيانات المواقع السياحية الجزائرية (17 موقعاً)
+# ============================================================
+ALGERIAN_SITES = [
+    {"id": 1, "name": "القصبة", "city": "الجزائر", "desc": "مدينة قديمة مصنفة ضمن التراث العالمي", "lat": 36.7850, "lng": 3.0600},
+    {"id": 2, "name": "تيبازة", "city": "تيبازة", "desc": "آثار رومانية ومدرج", "lat": 36.5945, "lng": 2.4430},
+    {"id": 3, "name": "تيمقاد", "city": "باتنة", "desc": "مدينة رومانية أثرية", "lat": 35.4850, "lng": 6.4680},
+    {"id": 4, "name": "جانت", "city": "إليزي", "desc": "واحة ولوحات صخرية", "lat": 24.5540, "lng": 9.4750},
+    {"id": 5, "name": "تاسيلي ناجر", "city": "إليزي", "desc": "موقع فني صخري عالمي", "lat": 25.2167, "lng": 8.6667},
+    {"id": 6, "name": "وهران", "city": "وهران", "desc": "مدينة ساحلية وقلعة", "lat": 35.6969, "lng": -0.6331},
+    {"id": 7, "name": "شرشال", "city": "تيبازة", "desc": "مدينة تاريخية وميناء", "lat": 36.6080, "lng": 2.1950},
+    {"id": 8, "name": "تيبازة (المدرج)", "city": "تيبازة", "desc": "مدرج روماني", "lat": 36.5945, "lng": 2.4430},
+    {"id": 9, "name": "بجاية", "city": "بجاية", "desc": "مدينة ساحلية وقلعة", "lat": 36.7500, "lng": 5.0667},
+    {"id": 10, "name": "قسنطينة", "city": "قسنطينة", "desc": "جسور معلقة ومدينة قديمة", "lat": 36.3650, "lng": 6.6147},
+    {"id": 11, "name": "الجزائر العاصمة", "city": "الجزائر", "desc": "العاصمة ومباني استعمارية", "lat": 36.7538, "lng": 3.0588},
+    {"id": 12, "name": "الشلف", "city": "الشلف", "desc": "مدينة زراعية وموقع أثري", "lat": 36.1650, "lng": 1.3310},
+    {"id": 13, "name": "عين وسارة", "city": "الجلفة", "desc": "منطقة سياحية وجبلية", "lat": 35.2640, "lng": 2.9300},
+    {"id": 14, "name": "غرداية", "city": "غرداية", "desc": "مدينة إباضية وواحة", "lat": 32.4830, "lng": 3.6667},
+    {"id": 15, "name": "تمنراست", "city": "تمنراست", "desc": "بوابة الصحراء", "lat": 22.7850, "lng": 5.5228},
+    {"id": 16, "name": "جيجل", "city": "جيجل", "desc": "شواطئ وغابات", "lat": 36.8200, "lng": 5.7667},
+    {"id": 17, "name": "سكيكدة", "city": "سكيكدة", "desc": "مدينة ساحلية وميناء", "lat": 36.8667, "lng": 6.9000}
+]
+
+# ============================================================
+# HTML الكامل (مضمن)
+# ============================================================
+HTML_TEMPLATE = """
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI GLOBAL TOURISM V6 | Hologram & AI Twin Platform</title>
+    <!-- Font Awesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        /* ===== ROOT ===== */
+        :root {
+            --bg-gradient: radial-gradient(circle at top center, #070b14 0%, #02040a 70%, #000000 100%);
+            --glass-bg: rgba(6, 182, 212, 0.04);
+            --glass-border: rgba(6, 182, 212, 0.28);
+            --glass-card: rgba(15, 23, 42, 0.8);
+            --glass-modal: rgba(2, 6, 23, 0.96);
+            --accent-cyan: #06b6d4;
+            --accent-cyan-glow: rgba(6, 182, 212, 0.6);
+            --accent-emerald: #10b981;
+            --accent-gold: #f59e0b;
+            --accent-red: #ef4444;
+            --neon-purple: #8b5cf6;
+            --text-main: #f8fafc;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 80px;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
+            background-size: 25px 25px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(2, 6, 23, 0.88);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            will-change: transform, backdrop-filter;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .brand i {
+            font-size: 1.6rem;
+            color: var(--accent-cyan);
+            text-shadow: 0 0 12px var(--accent-cyan);
+        }
+        .brand h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, #06b6d4, #8b5cf6, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .lang-switch {
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid var(--glass-border);
+            color: var(--accent-cyan);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            outline: none;
+            cursor: pointer;
+        }
+        .login-btn {
+            background: var(--neon-purple);
+            border: none;
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .login-btn i {
+            margin-left: 4px;
+        }
+
+        /* ===== CONTAINER & SCREENS ===== */
+        .container {
+            padding: 0 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .app-screen {
+            display: none;
+            animation: fadeIn 0.35s ease;
+        }
+        .app-screen.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* ===== HOLOGRAM ROBOT CARD ===== */
+        .holo-card {
+            background: rgba(15, 23, 42, 0.82);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 18px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+            margin-top: 14px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(6, 182, 212, 0.12);
+            will-change: transform, backdrop-filter;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .holo-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.35) 0%, rgba(3, 7, 18, 0.95) 100%);
+            border: 2px solid var(--neon-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--accent-cyan);
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.5);
+            position: relative;
+        }
+        .holo-avatar.speaking {
+            animation: holo-pulse 0.7s infinite alternate;
+            border-color: var(--accent-emerald);
+        }
+        @keyframes holo-pulse {
+            0% {
+                box-shadow: 0 0 10px var(--neon-purple);
+            }
+            100% {
+                box-shadow: 0 0 35px var(--accent-emerald);
+            }
+        }
+
+        .ai-input-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 14px;
+        }
+        .ai-input-group input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 14px;
+            border: 1px solid var(--glass-border);
+            background: rgba(2, 6, 23, 0.8);
+            color: #fff;
+            font-size: 0.85rem;
+            outline: none;
+        }
+        .ai-input-group button {
+            background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 100%);
+            color: #fff;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+        .ai-input-group button:active {
+            transform: scale(0.94);
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 14px;
+        }
+        .quick-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 10px 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-main);
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .quick-btn i {
+            font-size: 1.1rem;
+            color: var(--accent-cyan);
+        }
+        .quick-btn:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+
+        .glass-box {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 16px;
+            margin-top: 12px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            will-change: transform, backdrop-filter;
+            -webkit-backface-visibility: hidden;
+        }
+
+        #aiResponse {
+            margin-top: 12px;
+            font-size: 0.85rem;
+            display: none;
+            color: #4ade80;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            transition: all 0.3s;
+        }
+
+        /* ===== MAP WRAPPER ===== */
+        .map-wrapper {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 10px;
+            margin-top: 14px;
+            position: relative;
+            will-change: transform, backdrop-filter;
+            -webkit-backface-visibility: hidden;
+            overflow: hidden;
+        }
+
+        .map-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+            box-shadow: inset 0 0 30px rgba(6, 182, 212, 0.15);
+            z-index: 2;
+        }
+
+        .map-frame-3d {
+            width: 100%;
+            height: 250px;
+            border-radius: 16px;
+            border: none;
+            filter: contrast(1.1) saturate(1.2);
+            transform: perspective(600px) rotateX(4deg);
+            transition: transform 0.4s ease;
+            position: relative;
+            z-index: 1;
+        }
+        .map-frame-3d:hover {
+            transform: perspective(600px) rotateX(0deg);
+        }
+
+        .map-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 3;
+        }
+
+        /* ===== BOTTOM NAV ===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 68px;
+            background: rgba(2, 6, 23, 0.94);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+            overflow-x: auto;
+            padding: 0 4px;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-muted);
+            font-size: 0.65rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px 8px;
+            white-space: nowrap;
+        }
+        .nav-item.active {
+            color: var(--accent-cyan);
+            font-weight: bold;
+        }
+        .nav-item i {
+            font-size: 1.1rem;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(2, 6, 23, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 2000;
+            display: flex;
+            align-items: flex-end;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content {
+            background: var(--glass-modal);
+            border: 1px solid var(--accent-cyan);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            border-radius: 28px 28px 0 0;
+            padding: 22px 18px 30px 18px;
+            transform: translateY(100%);
+            transition: transform 0.35s ease;
+        }
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        /* ===== SITES GRID ===== */
+        .sites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .site-card {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .site-card:hover {
+            border-color: var(--accent-cyan);
+            transform: scale(1.02);
+        }
+        .site-card i {
+            font-size: 2rem;
+            color: var(--accent-gold);
+        }
+        .site-card h4 {
+            font-size: 0.8rem;
+            margin: 4px 0;
+        }
+        .site-card p {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== ROBOT CHAT ===== */
+        .chat-box {
+            background: rgba(2, 6, 23, 0.7);
+            border-radius: 16px;
+            padding: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 8px;
+        }
+        .chat-msg {
+            margin: 6px 0;
+            padding: 8px 12px;
+            border-radius: 12px;
+            max-width: 85%;
+        }
+        .chat-msg.user {
+            background: var(--neon-purple);
+            color: #fff;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .chat-msg.bot {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+        }
+
+        /* ===== LOGIN FORM ===== */
+        .login-form input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            background: rgba(2, 6, 23, 0.8);
+            color: #fff;
+            margin-top: 8px;
+            outline: none;
+        }
+        .login-form button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--neon-purple));
+            color: #fff;
+            font-weight: bold;
+            margin-top: 12px;
+            cursor: pointer;
+        }
+        .verification-code {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 12px 0;
+        }
+        .verification-code input {
+            width: 45px;
+            height: 50px;
+            text-align: center;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            background: rgba(2, 6, 23, 0.8);
+            color: #fff;
+            outline: none;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .brand h1 {
+                font-size: 0.8rem;
+            }
+            .quick-grid {
+                gap: 6px;
+            }
+            .quick-btn {
+                padding: 8px 2px;
+                font-size: 0.6rem;
+            }
+            .sites-grid {
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header>
+        <div class="brand">
+            <i class="fa-solid fa-vr-cardboard"></i>
+            <h1>CPAY HOLOGRAM AI V6</h1>
+        </div>
+        <div class="header-actions">
+            <button class="login-btn" onclick="openLoginModal()">
+                <i class="fa-solid fa-user"></i> <span id="loginBtnText">تسجيل الدخول</span>
+            </button>
+            <select class="lang-switch" id="langSelect" onchange="switchLanguage()">
+                <option value="ar">🇩🇿 العربية</option>
+                <option value="en">🇬🇧 English</option>
+                <option value="fr">🇫🇷 Français</option>
+            </select>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- ===== SCREEN 1: HOLOGRAM HOME ===== -->
+        <section id="screen-home" class="app-screen active">
+
+            <div class="holo-card">
+                <div style="display:flex; align-items:center; gap:14px;">
+                    <div class="holo-avatar" id="robotAvatar">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div>
+                        <h3 id="robotName" style="font-size:1rem; font-weight:800;">الروبوت السياحي الهولوغرامي 3D</h3>
+                        <p id="robotStatus" style="font-size:0.75rem; color:var(--text-muted);">مساعد الذكاء الاصطناعي و AI Twin Active</p>
+                    </div>
+                </div>
+
+                <div class="ai-input-group">
+                    <input type="text" id="aiQuery" placeholder="اسأل الروبوت الهولوغرامي أو ابحث عن وجهة..." />
+                    <button onclick="askAIAndSpeak()"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
+                </div>
+
+                <!-- Quick Cyber Category Hub -->
+                <div class="quick-grid">
+                    <div class="quick-btn" onclick="openModal('hospitals')">
+                        <i class="fa-solid fa-hospital" style="color:var(--accent-red);"></i>
+                        <span id="qHospitals">مستشفيات</span>
+                    </div>
+                    <div class="quick-btn" onclick="openModal('flights')">
+                        <i class="fa-solid fa-plane-departure" style="color:var(--accent-cyan);"></i>
+                        <span id="qFlights">طيران</span>
+                    </div>
+                    <div class="quick-btn" onclick="openModal('ferry')">
+                        <i class="fa-solid fa-ship" style="color:var(--neon-purple);"></i>
+                        <span id="qFerry">باخرة</span>
+                    </div>
+                    <div class="quick-btn" onclick="openModal('stations')">
+                        <i class="fa-solid fa-bus" style="color:var(--accent-gold);"></i>
+                        <span id="qStations">محطات</span>
+                    </div>
+                </div>
+
+                <div id="aiResponse"></div>
+            </div>
+
+            <!-- AI Twin Planner Box -->
+            <div class="glass-box" style="border-color: var(--neon-purple);">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h4><i class="fa-solid fa-user-gear" style="color:var(--neon-purple);"></i> <span id="twinTitle">التخطيط التلقائي (AI Twin Travel)</span></h4>
+                    <span style="font-size:0.68rem; background:rgba(139,92,246,0.2); color:var(--neon-purple); padding:2px 8px; border-radius:10px;">النسخة الرقمية</span>
+                </div>
+                <p id="twinDesc" style="font-size:0.78rem; color:var(--text-muted); margin-top:6px;">تحليل الميزانية، الوقت، والاهتمامات لإنشاء مسار سياحي ذكي مخصص.</p>
+                <button onclick="runAITwin()" style="width:100%; margin-top:10px; padding:10px; background:linear-gradient(135deg, var(--neon-purple) 0%, #6d28d9 100%); border:none; border-radius:12px; color:#fff; font-weight:bold; cursor:pointer;">
+                    <span id="twinBtn">توليد خطة الرحلة التلقائية 🚀</span>
+                </button>
+            </div>
+
+            <!-- Map UI -->
+            <div class="map-wrapper">
+                <div class="map-controls">
+                    <span style="font-size:0.78rem; color:var(--text-muted);" id="mapLocationLabel">الجزائر 3D View AR</span>
+                    <button class="quick-btn" style="padding:4px 8px;" onclick="toggleARMode()">
+                        <i class="fa-solid fa-eye"></i> <span id="arBtnText">نمط الواقع المعزز AR</span>
+                    </button>
+                </div>
+                <iframe id="gmapFrame" class="map-frame-3d" src="https://maps.google.com/maps?q=Algiers,Algeria&t=k&z=15&ie=UTF8&iwloc=&output=embed"></iframe>
+            </div>
+
+            <!-- Quick access to other screens -->
+            <div style="display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;">
+                <button onclick="switchTab('explore', document.querySelector('[data-screen=\\'explore\\']'))" class="quick-btn" style="flex:1;">
+                    <i class="fa-solid fa-compass"></i> <span id="navExplore">المغامرات</span>
+                </button>
+                <button onclick="switchTab('sites', document.querySelector('[data-screen=\\'sites\\']'))" class="quick-btn" style="flex:1;">
+                    <i class="fa-solid fa-map-location-dot"></i> <span>المواقع</span>
+                </button>
+                <button onclick="switchTab('robot', document.querySelector('[data-screen=\\'robot\\']'))" class="quick-btn" style="flex:1;">
+                    <i class="fa-solid fa-robot"></i> <span>الروبوت الذكي</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- ===== SCREEN 2: EXPLORE & ADVENTURE ===== -->
+        <section id="screen-explore" class="app-screen">
+            <div style="padding: 12px 0;">
+                <h2 id="exploreTitle">اكتشاف المغامرات والتصنيفات 🏜️🌊</h2>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <div class="glass-box" onclick="selectAdventure('سياحة صحراوية جانت والهقار')">
+                    <h4>🏜️ <span id="adv1">سياحة صحراوية (جانْت والهقّار)</span></h4>
+                    <p style="font-size:0.75rem; color:var(--text-muted);" id="adv1desc">مغامرات الكثبان والرسومات التاسيلي التاريخية</p>
+                </div>
+                <div class="glass-box" onclick="selectAdventure('سياحة بحرية وهران وشرشال')">
+                    <h4>🌊 <span id="adv2">سياحة بحرية (وهران، تيبازة، وشرشال)</span></h4>
+                    <p style="font-size:0.75rem; color:var(--text-muted);" id="adv2desc">شواطئ ساحرة وموانئ سياحية يختية</p>
+                </div>
+                <div class="glass-box" onclick="selectAdventure('سياحة جبلية جرجرة وتيكجدة')">
+                    <h4>⛰️ <span id="adv3">سياحة جبلية (جرجرة وتيكجدة)</span></h4>
+                    <p style="font-size:0.75rem; color:var(--text-muted);" id="adv3desc">مسارات الجبال، الثلوج، والتخييم</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SCREEN 3: PASSPORT & SAFETY ===== -->
+        <section id="screen-passport" class="app-screen">
+            <div style="padding: 12px 0;">
+                <h2 id="passportTitle">جواز السفر الرقمي والأمان 🛡️</h2>
+            </div>
+
+            <div class="glass-box" style="border-color:var(--accent-red);">
+                <h4><i class="fa-solid fa-triangle-exclamation" style="color:var(--accent-red);"></i> <span id="safetyTitle">مساعد الأمان والخدمات المحلية</span></h4>
+                <p style="font-size:0.78rem; color:var(--text-muted); margin:6px 0;" id="safetyDesc">تنبيهات الطقس والازدحام المباشرة زر الطوارئ السريع</p>
+                <button onclick="triggerEmergency()" style="width:100%; padding:10px; background:var(--accent-red); border:none; border-radius:12px; color:#fff; font-weight:bold; cursor:pointer;">
+                    <span id="emergencyBtn">إرسال استغاثة طوارئ سريعة 🆘</span>
+                </button>
+            </div>
+
+            <div class="glass-box">
+                <h4><i class="fa-solid fa-passport" style="color:var(--accent-gold);"></i> <span id="digitalPassport">جواز السفر السياحي الرقمي</span></h4>
+                <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
+                    <span style="background:rgba(245,158,11,0.2); color:var(--accent-gold); padding:6px 12px; border-radius:10px; font-size:0.78rem;">🏅 <span id="badge1">وسام الاستكشاف الصحراوي</span></span>
+                    <span style="background:rgba(6,182,212,0.2); color:var(--accent-cyan); padding:6px 12px; border-radius:10px; font-size:0.78rem;">⭐ <span id="badge2">450 نقطة مكافآت</span></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SCREEN 4: PROFILE & TRANSLATOR ===== -->
+        <section id="screen-profile" class="app-screen">
+            <div style="padding: 12px 0;">
+                <h2 id="translatorTitle">المترجم الفوري والنظام 🌐</h2>
+            </div>
+
+            <div class="glass-box">
+                <h4><i class="fa-solid fa-language" style="color:var(--accent-cyan);"></i> <span id="liveTranslator">المترجم الفوري المباشر</span></h4>
+                <div style="display:flex; gap:8px; margin-top:10px;">
+                    <input type="text" id="transInput" placeholder="اكتب النص للترجمة المباشرة..." style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--glass-border); background:rgba(2,6,23,0.7); color:#fff; outline:none;" />
+                    <button onclick="translateLive()" style="padding:10px 14px; background:var(--accent-cyan); border:none; border-radius:10px; font-weight:bold; color:#0f172a; cursor:pointer;">
+                        <span id="translateBtn">ترجمة</span>
+                    </button>
+                </div>
+                <div id="transResult" style="margin-top:10px; font-size:0.85rem; color:var(--accent-emerald);"></div>
+            </div>
+        </section>
+
+        <!-- ===== SCREEN 5: 17 SITES ===== -->
+        <section id="screen-sites" class="app-screen">
+            <div style="padding:12px 0; display:flex; justify-content:space-between; align-items:center;">
+                <h2 id="sitesTitle">🗺️ 17 موقعاً سياحياً جزائرياً</h2>
+                <button onclick="switchTab('home', document.querySelector('[data-screen=\\'home\\']'))" class="quick-btn" style="padding:4px 10px;">
+                    <i class="fa-solid fa-arrow-right"></i> رجوع
+                </button>
+            </div>
+            <div class="sites-grid" id="sitesContainer">
+                <!-- يتم تعبئتها بواسطة JavaScript -->
+            </div>
+        </section>
+
+        <!-- ===== SCREEN 6: ROBOT CHAT ===== -->
+        <section id="screen-robot" class="app-screen">
+            <div style="padding:12px 0; display:flex; justify-content:space-between; align-items:center;">
+                <h2 id="robotTitle">🤖 الروبوت الذكي لتوجيه السياح</h2>
+                <button onclick="switchTab('home', document.querySelector('[data-screen=\\'home\\']'))" class="quick-btn" style="padding:4px 10px;">
+                    <i class="fa-solid fa-arrow-right"></i> رجوع
+                </button>
+            </div>
+            <div class="glass-box">
+                <p style="font-size:0.8rem; color:var(--text-muted);">اسأل الروبوت عن أي موقع سياحي جزائري، وسيقدم لك معلومات وإرشادات.</p>
+                <div class="chat-box" id="chatBox">
+                    <div class="chat-msg bot">مرحباً! أنا الروبوت الذكي المتخصص في السياحة الجزائرية. اسألني عن أي موقع.</div>
+                </div>
+                <div class="ai-input-group" style="margin-top:10px;">
+                    <input type="text" id="robotQuery" placeholder="اكتب سؤالك عن المواقع الجزائرية..." />
+                    <button onclick="sendRobotQuery()"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- ===== LOGIN MODAL ===== -->
+    <div class="modal-overlay" id="loginModal" onclick="closeLoginModalOnOuter(event)">
+        <div class="modal-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <h3 id="loginTitle"><i class="fa-solid fa-user-lock"></i> تسجيل الدخول</h3>
+                <div style="cursor:pointer;" onclick="closeLoginModal()"><i class="fa-solid fa-xmark"></i></div>
+            </div>
+            <div class="login-form">
+                <input type="text" id="loginPhone" placeholder="أدخل رقم الهاتف أو البريد الإلكتروني" />
+                <div style="margin-top:10px;">
+                    <button onclick="sendVerificationCode()" id="sendCodeBtn">إرسال رمز التحقق</button>
+                </div>
+                <div class="verification-code" id="verificationArea" style="display:none;">
+                    <input type="text" maxlength="1" class="code-input" />
+                    <input type="text" maxlength="1" class="code-input" />
+                    <input type="text" maxlength="1" class="code-input" />
+                    <input type="text" maxlength="1" class="code-input" />
+                </div>
+                <button onclick="verifyLogin()" id="verifyBtn" style="display:none;">تأكيد وتسجيل الدخول</button>
+                <p id="loginStatus" style="margin-top:8px; font-size:0.8rem; color:var(--accent-gold);"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SERVICE MODAL (original) ===== -->
+    <div class="modal-overlay" id="serviceModal" onclick="closeModalOnOuter(event)">
+        <div class="modal-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <h3 id="modalTitle"><i class="fa-solid fa-circle-info"></i> تفاصيل الخدمة</h3>
+                <div style="cursor:pointer;" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></div>
+            </div>
+            <div id="modalBody" style="display:flex; flex-direction:column; gap:10px;"></div>
+        </div>
+    </div>
+
+    <!-- ===== BOTTOM NAV ===== -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" data-screen="home" onclick="switchTab('home', this)">
+            <i class="fa-solid fa-vr-cardboard"></i>
+            <span id="navHome">الرئيسية</span>
+        </button>
+        <button class="nav-item" data-screen="sites" onclick="switchTab('sites', this)">
+            <i class="fa-solid fa-map-location-dot"></i>
+            <span id="navSites">المواقع</span>
+        </button>
+        <button class="nav-item" data-screen="robot" onclick="switchTab('robot', this)">
+            <i class="fa-solid fa-robot"></i>
+            <span id="navRobot">الروبوت</span>
+        </button>
+        <button class="nav-item" data-screen="passport" onclick="switchTab('passport', this)">
+            <i class="fa-solid fa-passport"></i>
+            <span id="navPassport">الجواز</span>
+        </button>
+        <button class="nav-item" data-screen="profile" onclick="switchTab('profile', this)">
+            <i class="fa-solid fa-globe"></i>
+            <span id="navProfile">المترجم</span>
+        </button>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- ======================= JAVASCRIPT ========================== -->
+    <!-- ============================================================ -->
+    <script>
+        // ============================================================
+        // 1. TRANSLATIONS (FULL)
+        // ============================================================
+        const translations = {
+            ar: {
+                robotName: 'الروبوت السياحي الهولوغرامي 3D',
+                robotStatus: 'مساعد الذكاء الاصطناعي و AI Twin Active',
+                aiPlaceholder: 'اسأل الروبوت الهولوغرامي أو ابحث عن وجهة...',
+                qHospitals: 'مستشفيات',
+                qFlights: 'طيران',
+                qFerry: 'باخرة',
+                qStations: 'محطات',
+                twinTitle: 'التخطيط التلقائي (AI Twin Travel)',
+                twinDesc: 'تحليل الميزانية، الوقت، والاهتمامات لإنشاء مسار سياحي ذكي مخصص.',
+                twinBtn: 'توليد خطة الرحلة التلقائية 🚀',
+                mapLabel: 'الجزائر 3D View AR',
+                arBtnText: 'نمط الواقع المعزز AR',
+                exploreTitle: 'اكتشاف المغامرات والتصنيفات 🏜️🌊',
+                adv1: 'سياحة صحراوية (جانْت والهقّار)',
+                adv1desc: 'مغامرات الكثبان والرسومات التاسيلي التاريخية',
+                adv2: 'سياحة بحرية (وهران، تيبازة، وشرشال)',
+                adv2desc: 'شواطئ ساحرة وموانئ سياحية يختية',
+                adv3: 'سياحة جبلية (جرجرة وتيكجدة)',
+                adv3desc: 'مسارات الجبال، الثلوج، والتخييم',
+                passportTitle: 'جواز السفر الرقمي والأمان 🛡️',
+                safetyTitle: 'مساعد الأمان والخدمات المحلية',
+                safetyDesc: 'تنبيهات الطقس والازدحام المباشرة زر الطوارئ السريع',
+                emergencyBtn: 'إرسال استغاثة طوارئ سريعة 🆘',
+                digitalPassport: 'جواز السفر السياحي الرقمي',
+                badge1: 'وسام الاستكشاف الصحراوي',
+                badge2: '450 نقطة مكافآت',
+                translatorTitle: 'المترجم الفوري والنظام 🌐',
+                liveTranslator: 'المترجم الفوري المباشر',
+                transPlaceholder: 'اكتب النص للترجمة المباشرة...',
+                translateBtn: 'ترجمة',
+                navHome: 'الرئيسية',
+                navExplore: 'المغامرات',
+                navPassport: 'الجواز',
+                navProfile: 'المترجم',
+                navSites: 'المواقع',
+                navRobot: 'الروبوت',
+                sitesTitle: '🗺️ 17 موقعاً سياحياً جزائرياً',
+                robotTitle: '🤖 الروبوت الذكي لتوجيه السياح',
+                loginTitle: 'تسجيل الدخول',
+                loginBtnText: 'تسجيل الدخول',
+                sendCode: 'إرسال رمز التحقق',
+                verifyBtn: 'تأكيد وتسجيل الدخول',
+                loginStatus: 'تم إرسال رمز التحقق إلى رقمك',
+                loginSuccess: 'تم تسجيل الدخول بنجاح!',
+                loginError: 'رمز التحقق غير صحيح، حاول مجدداً',
+                // Modal data
+                modal_hospitals_title: '🏥 المستشفيات والعيادات الطبية',
+                modal_hospitals_item1: 'المركز الاستشفائي الجامعي (CHU)',
+                modal_hospitals_desc1: 'طوارئ 24/7 وإحداثيات سريعة',
+                modal_hospitals_item2: 'عيادات الإسعاف السياحي',
+                modal_hospitals_desc2: 'خدمة طبية فورية باللغات الثلاث',
+                modal_flights_title: '✈️ محطات الطيران والرحلات الجوية',
+                modal_flights_item1: 'مطار هواري بومدين الدولي',
+                modal_flights_desc1: 'حجز ومتابعة الرحلات الجوية',
+                modal_ferry_title: '⛴️ الموانئ والباخرات السياحية',
+                modal_ferry_item1: 'ميناء الجزائر / وهران البحري',
+                modal_ferry_desc1: 'رحلات الباخرة والنقل البحري',
+                modal_stations_title: '🚍 محطات النقل والقطارات',
+                modal_stations_item1: 'المحطة المركزية للقطارات والحافلات',
+                modal_stations_desc1: 'مواعيد وخطوط النقل البري',
+                // Responses
+                response_loading: '⏳ جاري تحليل الوجهة ومعالجة الخريطة...',
+                response_success: 'تم تحديث الوجهة إلى {query} بنجاح. استمتع برحلتك الافتراضية!',
+                twin_plan: 'مرحباً هواري، خطتك التلقائية الموصى بها عبر AI Twin: تيبازة 🏛️ -> شرشال 🏖️ -> الهقار 🏜️. الميزانية التقديرية: 250$ | الطقس: ممتاز | الدفع: عبر CPAY ROBOT AI 💳',
+                twin_speak: 'تم إنشاء الخطة السياحية التلقائية المخصصة بنجاح بواسطة النسخة الرقمية الخاصة بك',
+                ar_mode_activated: 'تم تفعيل وضع الواقع المعزز AR وإظهار الأسهم المضيئة فوق الكاميرا',
+                emergency_alert: 'تم تنشيط زر الطوارئ وإرسال الإحداثيات فوراً إلى الخدمات المحلية والمستشفيات القريبة',
+                translate_result: '[ترجمة هولوغرامية]: {text} (Translating to Local Dialect...)',
+                modal_speak_hospitals: 'عرض قائمة المستشفيات والعيادات',
+                modal_speak_flights: 'عرض قائمة محطات الطيران',
+                modal_speak_ferry: 'عرض قائمة الموانئ والباخرات',
+                modal_speak_stations: 'عرض قائمة محطات النقل',
+                lang_changed_ar: 'تم تغيير اللغة إلى العربية',
+                lang_changed_en: 'Language set to English',
+                lang_changed_fr: 'Langue changée en Français',
+                robot_greeting: 'مرحباً! أنا الروبوت الذكي المتخصص في السياحة الجزائرية. اسألني عن أي موقع.',
+                robot_unknown: 'عذراً، لم أفهم سؤالك. يمكنك سؤالي عن أحد المواقع السياحية الجزائرية.',
+                robot_site_info: '📍 {name} - {city}: {desc} (الإحداثيات: {lat}, {lng})',
+            },
+            en: {
+                robotName: 'Holographic Tourism Robot 3D',
+                robotStatus: 'AI Assistant & AI Twin Active',
+                aiPlaceholder: 'Ask the hologram robot or search for a destination...',
+                qHospitals: 'Hospitals',
+                qFlights: 'Flights',
+                qFerry: 'Ferry',
+                qStations: 'Stations',
+                twinTitle: 'Auto Planning (AI Twin Travel)',
+                twinDesc: 'Analyze budget, time, and interests to create a smart custom itinerary.',
+                twinBtn: 'Generate Auto Trip Plan 🚀',
+                mapLabel: 'Algiers 3D View AR',
+                arBtnText: 'AR Mode',
+                exploreTitle: 'Discover Adventures & Ratings 🏜️🌊',
+                adv1: 'Desert Tourism (Tassili & Hoggar)',
+                adv1desc: 'Dune adventures and historical rock art',
+                adv2: 'Coastal Tourism (Oran, Tipaza, Cherchell)',
+                adv2desc: 'Beautiful beaches and yacht marinas',
+                adv3: 'Mountain Tourism (Jurjura & Tikjda)',
+                adv3desc: 'Mountain trails, snow, and camping',
+                passportTitle: 'Digital Passport & Safety 🛡️',
+                safetyTitle: 'Safety Assistant & Local Services',
+                safetyDesc: 'Live weather, congestion alerts, and emergency button',
+                emergencyBtn: 'Send Rapid Emergency Alert 🆘',
+                digitalPassport: 'Digital Tourism Passport',
+                badge1: 'Desert Exploration Medal',
+                badge2: '450 Reward Points',
+                translatorTitle: 'Instant Translator & System 🌐',
+                liveTranslator: 'Live Instant Translator',
+                transPlaceholder: 'Type text for instant translation...',
+                translateBtn: 'Translate',
+                navHome: 'Home',
+                navExplore: 'Adventures',
+                navPassport: 'Passport',
+                navProfile: 'Translator',
+                navSites: 'Sites',
+                navRobot: 'Robot',
+                sitesTitle: '🗺️ 17 Algerian Tourist Sites',
+                robotTitle: '🤖 Smart Tourist Guidance Robot',
+                loginTitle: 'Login',
+                loginBtnText: 'Login',
+                sendCode: 'Send Verification Code',
+                verifyBtn: 'Verify & Login',
+                loginStatus: 'Verification code sent to your number',
+                loginSuccess: 'Login successful!',
+                loginError: 'Invalid verification code, try again',
+                modal_hospitals_title: '🏥 Hospitals & Medical Clinics',
+                modal_hospitals_item1: 'University Hospital Center (CHU)',
+                modal_hospitals_desc1: '24/7 emergency and quick coordinates',
+                modal_hospitals_item2: 'Tourist Emergency Clinics',
+                modal_hospitals_desc2: 'Immediate medical service in three languages',
+                modal_flights_title: '✈️ Airports & Flights',
+                modal_flights_item1: 'Houari Boumediene International Airport',
+                modal_flights_desc1: 'Booking and flight tracking',
+                modal_ferry_title: '⛴️ Ports & Tourist Ferries',
+                modal_ferry_item1: 'Algiers / Oran Seaport',
+                modal_ferry_desc1: 'Ferry trips and maritime transport',
+                modal_stations_title: '🚍 Transport Stations & Trains',
+                modal_stations_item1: 'Central Railway & Bus Station',
+                modal_stations_desc1: 'Schedules and ground transport lines',
+                response_loading: '⏳ Analyzing destination and processing map...',
+                response_success: 'Destination updated to {query}. Enjoy your virtual tour!',
+                twin_plan: 'Hello, your AI Twin recommended plan: Tipaza 🏛️ -> Cherchell 🏖️ -> Hoggar 🏜️. Estimated budget: 250$ | Weather: Excellent | Payment: via CPAY ROBOT AI 💳',
+                twin_speak: 'Your personalized automatic trip plan has been successfully created by your digital twin.',
+                ar_mode_activated: 'AR mode activated, glowing arrows displayed over the camera.',
+                emergency_alert: 'Emergency button activated, coordinates sent immediately to local services and nearby hospitals.',
+                translate_result: '[Holographic Translation]: {text} (Translating to Local Dialect...)',
+                modal_speak_hospitals: 'Showing hospitals and clinics list',
+                modal_speak_flights: 'Showing airports and flights list',
+                modal_speak_ferry: 'Showing ports and ferries list',
+                modal_speak_stations: 'Showing transport stations list',
+                lang_changed_ar: 'Language set to Arabic',
+                lang_changed_en: 'Language set to English',
+                lang_changed_fr: 'Language set to French',
+                robot_greeting: 'Hello! I am the smart robot specialized in Algerian tourism. Ask me about any site.',
+                robot_unknown: 'Sorry, I didn\'t understand your question. You can ask me about one of the Algerian tourist sites.',
+                robot_site_info: '📍 {name} - {city}: {desc} (Coordinates: {lat}, {lng})',
+            },
+            fr: {
+                robotName: 'Robot Touristique Holographique 3D',
+                robotStatus: 'Assistant IA et Jumeau Numérique Actif',
+                aiPlaceholder: 'Demandez au robot holographique ou recherchez une destination...',
+                qHospitals: 'Hôpitaux',
+                qFlights: 'Vols',
+                qFerry: 'Ferry',
+                qStations: 'Stations',
+                twinTitle: 'Planification Automatique (AI Twin Travel)',
+                twinDesc: 'Analyse du budget, du temps et des intérêts pour créer un itinéraire intelligent personnalisé.',
+                twinBtn: 'Générer un plan de voyage automatique 🚀',
+                mapLabel: 'Alger 3D View AR',
+                arBtnText: 'Mode RA',
+                exploreTitle: 'Découvrez les aventures et les classements 🏜️🌊',
+                adv1: 'Tourisme désertique (Tassili & Hoggar)',
+                adv1desc: 'Aventures dans les dunes et art rupestre historique',
+                adv2: 'Tourisme côtier (Oran, Tipaza, Cherchell)',
+                adv2desc: 'Plages magnifiques et marinas de plaisance',
+                adv3: 'Tourisme montagnard (Jurjura & Tikjda)',
+                adv3desc: 'Sentiers de montagne, neige et camping',
+                passportTitle: 'Passeport Numérique & Sécurité 🛡️',
+                safetyTitle: 'Assistant Sécurité & Services Locaux',
+                safetyDesc: 'Alertes météo et de congestion en direct, bouton d\'urgence rapide',
+                emergencyBtn: 'Envoyer une alerte d\'urgence rapide 🆘',
+                digitalPassport: 'Passeport Touristique Numérique',
+                badge1: 'Médaille d\'exploration du désert',
+                badge2: '450 points de récompense',
+                translatorTitle: 'Traducteur Instantané & Système 🌐',
+                liveTranslator: 'Traducteur Instantané en Direct',
+                transPlaceholder: 'Tapez le texte pour une traduction instantanée...',
+                translateBtn: 'Traduire',
+                navHome: 'Accueil',
+                navExplore: 'Aventures',
+                navPassport: 'Passeport',
+                navProfile: 'Traducteur',
+                navSites: 'Sites',
+                navRobot: 'Robot',
+                sitesTitle: '🗺️ 17 Sites Touristiques Algériens',
+                robotTitle: '🤖 Robot Intelligent de Guidance Touristique',
+                loginTitle: 'Connexion',
+                loginBtnText: 'Connexion',
+                sendCode: 'Envoyer le code de vérification',
+                verifyBtn: 'Vérifier et se connecter',
+                loginStatus: 'Code de vérification envoyé à votre numéro',
+                loginSuccess: 'Connexion réussie!',
+                loginError: 'Code de vérification invalide, réessayez',
+                modal_hospitals_title: '🏥 Hôpitaux et cliniques médicales',
+                modal_hospitals_item1: 'Centre Hospitalier Universitaire (CHU)',
+                modal_hospitals_desc1: 'Urgences 24/7 et coordonnées rapides',
+                modal_hospitals_item2: 'Cliniques d\'urgence touristique',
+                modal_hospitals_desc2: 'Service médical immédiat en trois langues',
+                modal_flights_title: '✈️ Aéroports et vols',
+                modal_flights_item1: 'Aéroport international Houari Boumediene',
+                modal_flights_desc1: 'Réservation et suivi des vols',
+                modal_ferry_title: '⛴️ Ports et ferries touristiques',
+                modal_ferry_item1: 'Port d\'Alger / Oran',
+                modal_ferry_desc1: 'Traversées en ferry et transport maritime',
+                modal_stations_title: '🚍 Gares de transport et trains',
+                modal_stations_item1: 'Gare centrale de trains et bus',
+                modal_stations_desc1: 'Horaires et lignes de transport terrestre',
+                response_loading: '⏳ Analyse de la destination et traitement de la carte...',
+                response_success: 'Destination mise à jour vers {query}. Profitez de votre visite virtuelle!',
+                twin_plan: 'Bonjour, votre plan recommandé par AI Twin: Tipaza 🏛️ -> Cherchell 🏖️ -> Hoggar 🏜️. Budget estimé: 250$ | Météo: Excellente | Paiement: via CPAY ROBOT AI 💳',
+                twin_speak: 'Votre plan de voyage automatique personnalisé a été créé avec succès par votre jumeau numérique.',
+                ar_mode_activated: 'Mode RA activé, des flèches lumineuses apparaissent sur la caméra.',
+                emergency_alert: 'Bouton d\'urgence activé, coordonnées envoyées immédiatement aux services locaux et hôpitaux proches.',
+                translate_result: '[Traduction Holographique]: {text} (Traduction en dialecte local...)',
+                modal_speak_hospitals: 'Affichage de la liste des hôpitaux et cliniques',
+                modal_speak_flights: 'Affichage de la liste des aéroports et vols',
+                modal_speak_ferry: 'Affichage de la liste des ports et ferries',
+                modal_speak_stations: 'Affichage de la liste des gares de transport',
+                lang_changed_ar: 'Langue changée en arabe',
+                lang_changed_en: 'Langue changée en anglais',
+                lang_changed_fr: 'Langue changée en français',
+                robot_greeting: 'Bonjour! Je suis le robot intelligent spécialisé dans le tourisme algérien. Posez-moi une question sur un site.',
+                robot_unknown: 'Désolé, je n\'ai pas compris votre question. Vous pouvez me demander des informations sur un site touristique algérien.',
+                robot_site_info: '📍 {name} - {city}: {desc} (Coordonnées: {lat}, {lng})',
+            }
+        };
+
+        // ============================================================
+        // 2. STATE
+        // ============================================================
+        let currentLang = 'ar';
+        let isSpeechEnabled = true;
+        let isSatellite = true;
+        let isLoggedIn = false;
+        let verificationCode = '';
+
+        // ============================================================
+        // 3. DOM REFS
+        // ============================================================
+        function getEl(id) { return document.getElementById(id); }
+
+        // ============================================================
+        // 4. APPLY LANGUAGE
+        // ============================================================
+        function applyLanguage(lang) {
+            const t = translations[lang];
+            if (!t) return;
+
+            // Robot card
+            getEl('robotName').innerText = t.robotName;
+            getEl('robotStatus').innerText = t.robotStatus;
+            getEl('aiQuery').placeholder = t.aiPlaceholder;
+
+            // Quick buttons
+            getEl('qHospitals').innerText = t.qHospitals;
+            getEl('qFlights').innerText = t.qFlights;
+            getEl('qFerry').innerText = t.qFerry;
+            getEl('qStations').innerText = t.qStations;
+
+            // Twin
+            getEl('twinTitle').innerText = t.twinTitle;
+            getEl('twinDesc').innerText = t.twinDesc;
+            getEl('twinBtn').innerText = t.twinBtn;
+
+            // Map
+            getEl('mapLocationLabel').innerText = t.mapLabel;
+            getEl('arBtnText').innerText = t.arBtnText;
+
+            // Explore
+            getEl('exploreTitle').innerText = t.exploreTitle;
+            getEl('adv1').innerText = t.adv1;
+            getEl('adv1desc').innerText = t.adv1desc;
+            getEl('adv2').innerText = t.adv2;
+            getEl('adv2desc').innerText = t.adv2desc;
+            getEl('adv3').innerText = t.adv3;
+            getEl('adv3desc').innerText = t.adv3desc;
+
+            // Passport
+            getEl('passportTitle').innerText = t.passportTitle;
+            getEl('safetyTitle').innerText = t.safetyTitle;
+            getEl('safetyDesc').innerText = t.safetyDesc;
+            getEl('emergencyBtn').innerText = t.emergencyBtn;
+            getEl('digitalPassport').innerText = t.digitalPassport;
+            getEl('badge1').innerText = t.badge1;
+            getEl('badge2').innerText = t.badge2;
+
+            // Translator
+            getEl('translatorTitle').innerText = t.translatorTitle;
+            getEl('liveTranslator').innerText = t.liveTranslator;
+            getEl('transInput').placeholder = t.transPlaceholder;
+            getEl('translateBtn').innerText = t.translateBtn;
+
+            // Bottom nav
+            getEl('navHome').innerText = t.navHome;
+            getEl('navExplore').innerText = t.navExplore;
+            getEl('navPassport').innerText = t.navPassport;
+            getEl('navProfile').innerText = t.navProfile;
+            getEl('navSites').innerText = t.navSites;
+            getEl('navRobot').innerText = t.navRobot;
+
+            // New screens
+            getEl('sitesTitle').innerText = t.sitesTitle;
+            getEl('robotTitle').innerText = t.robotTitle;
+            getEl('loginTitle').innerHTML = `<i class="fa-solid fa-user-lock"></i> ${t.loginTitle}`;
+            getEl('loginBtnText').innerText = t.loginBtnText;
+            getEl('sendCodeBtn').innerText = t.sendCode;
+            getEl('verifyBtn').innerText = t.verifyBtn;
+
+            // Store translations globally
+            window._translations = t;
+        }
+
+        // ============================================================
+        // 5. LANGUAGE SWITCHER
+        // ============================================================
+        function switchLanguage() {
+            const newLang = document.getElementById('langSelect').value;
+            if (newLang === currentLang) return;
+            currentLang = newLang;
+            applyLanguage(currentLang);
+            const t = window._translations;
+            const msg = currentLang === 'ar' ? t.lang_changed_ar :
+                currentLang === 'en' ? t.lang_changed_en : t.lang_changed_fr;
+            speakText(msg);
+        }
+
+        // ============================================================
+        // 6. SPEECH FUNCTIONS
+        // ============================================================
+        function speakText(text, lang = currentLang) {
+            if (!isSpeechEnabled || !('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = lang === 'fr' ? 'fr-FR' : (lang === 'en' ? 'en-US' : 'ar-SA');
+            utterance.pitch = 1.0;
+            utterance.rate = 0.95;
+
+            const avatar = getEl('robotAvatar');
+            utterance.onstart = () => avatar.classList.add('speaking');
+            utterance.onend = () => avatar.classList.remove('speaking');
+            utterance.onerror = () => avatar.classList.remove('speaking');
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function stopSpeech() {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            getEl('robotAvatar').classList.remove('speaking');
+        }
+
+        // ============================================================
+        // 7. AI QUERY (with loading and map update)
+        // ============================================================
+        function updateMap(query) {
+            const mapFrame = getEl('gmapFrame');
+            const mapTypeParam = isSatellite ? '&t=k' : '';
+            mapFrame.src =
+                `https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=15${mapTypeParam}&ie=UTF8&iwloc=&output=embed`;
+            const t = window._translations || translations[currentLang];
+            getEl('mapLocationLabel').innerText = `${query} (${t.mapLabel.split(' ').slice(1).join(' ') || '3D View'})`;
+        }
+
+        function askAIAndSpeak() {
+            const query = getEl('aiQuery').value.trim();
+            const res = getEl('aiResponse');
+            if (!query) return;
+
+            const t = window._translations || translations[currentLang];
+
+            res.style.display = 'block';
+            res.innerText = t.response_loading;
+            res.style.color = '#fbbf24';
+            res.style.borderColor = 'rgba(251, 191, 36, 0.3)';
+
+            setTimeout(() => {
+                const responseText = t.response_success.replace('{query}', query);
+                res.innerText = responseText;
+                res.style.color = '#4ade80';
+                res.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+                speakText(responseText);
+                updateMap(query);
+            }, 500);
+        }
+
+        // ============================================================
+        // 8. AI TWIN
+        // ============================================================
+        function runAITwin() {
+            const res = getEl('aiResponse');
+            const t = window._translations || translations[currentLang];
+            res.style.display = 'block';
+            res.innerText = t.twin_plan;
+            res.style.color = '#a78bfa';
+            res.style.borderColor = 'rgba(139, 92, 246, 0.3)';
+            speakText(t.twin_speak);
+        }
+
+        // ============================================================
+        // 9. MAP AR MODE
+        // ============================================================
+        function toggleARMode() {
+            const t = window._translations || translations[currentLang];
+            speakText(t.ar_mode_activated);
+            alert(t.ar_mode_activated);
+        }
+
+        // ============================================================
+        // 10. EMERGENCY
+        // ============================================================
+        function triggerEmergency() {
+            const t = window._translations || translations[currentLang];
+            speakText(t.emergency_alert);
+            alert('🚨 ' + t.emergency_alert);
+        }
+
+        // ============================================================
+        // 11. TRANSLATOR
+        // ============================================================
+        function translateLive() {
+            const text = getEl('transInput').value.trim();
+            if (!text) return;
+            const t = window._translations || translations[currentLang];
+            const result = t.translate_result.replace('{text}', text);
+            getEl('transResult').innerText = result;
+            speakText(text);
+        }
+
+        // ============================================================
+        // 12. EXPLORE ADVENTURES
+        // ============================================================
+        function selectAdventure(dest) {
+            switchTab('home', document.querySelector('[data-screen="home"]'));
+            getEl('aiQuery').value = dest;
+            askAIAndSpeak();
+        }
+
+        // ============================================================
+        // 13. TAB SWITCHING
+        // ============================================================
+        function switchTab(screenId, btnElement) {
+            document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            getEl(`screen-${screenId}`).classList.add('active');
+            if (btnElement) btnElement.classList.add('active');
+            // إذا كانت الشاشة هي المواقع، نقوم بتعبئتها
+            if (screenId === 'sites') renderSites();
+            if (screenId === 'robot') initRobotChat();
+        }
+
+        // ============================================================
+        // 14. MODAL SYSTEM (service)
+        // ============================================================
+        const serviceData = {
+            hospitals: {
+                titleKey: 'modal_hospitals_title',
+                items: [
+                    { titleKey: 'modal_hospitals_item1', descKey: 'modal_hospitals_desc1', icon: 'fa-hospital' },
+                    { titleKey: 'modal_hospitals_item2', descKey: 'modal_hospitals_desc2', icon: 'fa-user-doctor' }
+                ],
+                speakKey: 'modal_speak_hospitals'
+            },
+            flights: {
+                titleKey: 'modal_flights_title',
+                items: [
+                    { titleKey: 'modal_flights_item1', descKey: 'modal_flights_desc1', icon: 'fa-plane' }
+                ],
+                speakKey: 'modal_speak_flights'
+            },
+            ferry: {
+                titleKey: 'modal_ferry_title',
+                items: [
+                    { titleKey: 'modal_ferry_item1', descKey: 'modal_ferry_desc1', icon: 'fa-ship' }
+                ],
+                speakKey: 'modal_speak_ferry'
+            },
+            stations: {
+                titleKey: 'modal_stations_title',
+                items: [
+                    { titleKey: 'modal_stations_item1', descKey: 'modal_stations_desc1', icon: 'fa-bus' }
+                ],
+                speakKey: 'modal_speak_stations'
+            }
+        };
+
+        function openModal(type) {
+            const data = serviceData[type];
+            if (!data) return;
+            const t = window._translations || translations[currentLang];
+
+            const titleText = t[data.titleKey] || 'تفاصيل الخدمة';
+            getEl('modalTitle').innerHTML = `<i class="fa-solid fa-circle-info"></i> ${titleText}`;
+
+            const modalBody = getEl('modalBody');
+            modalBody.innerHTML = data.items.map(item => {
+                const itemTitle = t[item.titleKey] || item.titleKey;
+                const itemDesc = t[item.descKey] || item.descKey;
+                return `
+                    <div style="background:var(--glass-bg); border:1px solid var(--glass-border); padding:12px; border-radius:14px; display:flex; align-items:center; gap:12px;">
+                        <i class="fa-solid ${item.icon}" style="font-size:1.3rem; color:var(--accent-cyan);"></i>
+                        <div>
+                            <h5 style="font-size:0.88rem;">${itemTitle}</h5>
+                            <p style="font-size:0.75rem; color:var(--text-muted);">${itemDesc}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            getEl('serviceModal').classList.add('active');
+            const speakMsg = t[data.speakKey] || 'عرض الخدمة';
+            speakText(speakMsg);
+        }
+
+        function closeModal() {
+            getEl('serviceModal').classList.remove('active');
+            stopSpeech();
+        }
+
+        function closeModalOnOuter(e) {
+            if (e.target.classList.contains('modal-overlay')) closeModal();
+        }
+
+        // ============================================================
+        // 15. LOGIN MODAL
+        // ============================================================
+        function openLoginModal() {
+            getEl('loginModal').classList.add('active');
+            getEl('verificationArea').style.display = 'none';
+            getEl('verifyBtn').style.display = 'none';
+            getEl('loginStatus').innerText = '';
+            getEl('sendCodeBtn').style.display = 'block';
+            getEl('loginPhone').value = '';
+            // reset code inputs
+            document.querySelectorAll('.code-input').forEach(inp => inp.value = '');
+        }
+
+        function closeLoginModal() {
+            getEl('loginModal').classList.remove('active');
+            stopSpeech();
+        }
+
+        function closeLoginModalOnOuter(e) {
+            if (e.target.classList.contains('modal-overlay')) closeLoginModal();
+        }
+
+        function sendVerificationCode() {
+            const phone = getEl('loginPhone').value.trim();
+            if (!phone) {
+                getEl('loginStatus').innerText = 'الرجاء إدخال رقم الهاتف أو البريد';
+                return;
+            }
+            // توليد رمز عشوائي
+            verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
+            console.log('رمز التحقق:', verificationCode); // للمحاكاة
+            const t = window._translations || translations[currentLang];
+            getEl('loginStatus').innerText = t.loginStatus + ' (' + verificationCode + ')';
+            getEl('sendCodeBtn').style.display = 'none';
+            getEl('verificationArea').style.display = 'flex';
+            getEl('verifyBtn').style.display = 'block';
+            // التركيز على أول خانة
+            document.querySelector('.code-input').focus();
+        }
+
+        function verifyLogin() {
+            const inputs = document.querySelectorAll('.code-input');
+            let entered = '';
+            inputs.forEach(inp => entered += inp.value);
+            const t = window._translations || translations[currentLang];
+            if (entered === verificationCode) {
+                getEl('loginStatus').innerHTML = `<span style="color:var(--accent-emerald);">${t.loginSuccess}</span>`;
+                isLoggedIn = true;
+                getEl('loginBtnText').innerText = '👤 ' + getEl('loginPhone').value;
+                setTimeout(() => closeLoginModal(), 1500);
+            } else {
+                getEl('loginStatus').innerHTML = `<span style="color:var(--accent-red);">${t.loginError}</span>`;
+            }
+        }
+
+        // Auto-focus next input in verification
+        document.addEventListener('input', function(e) {
+            if (e.target.classList.contains('code-input')) {
+                const maxLen = 1;
+                if (e.target.value.length >= maxLen) {
+                    const next = e.target.nextElementSibling;
+                    if (next && next.classList.contains('code-input')) next.focus();
+                }
+            }
+        });
+
+        // ============================================================
+        // 16. SITES SCREEN
+        // ============================================================
+        const algerianSites = {{ sites|tojson }};
+
+        function renderSites() {
+            const container = getEl('sitesContainer');
+            if (!container) return;
+            // Clear and rebuild
+            container.innerHTML = '';
+            algerianSites.forEach(site => {
+                const card = document.createElement('div');
+                card.className = 'site-card';
+                card.innerHTML = `
+                    <i class="fa-solid fa-landmark"></i>
+                    <h4>${site.name}</h4>
+                    <p>${site.city}</p>
+                    <p style="font-size:0.6rem; color:var(--text-muted);">${site.desc}</p>
+                `;
+                card.onclick = () => {
+                    // عند النقر على الموقع، ننتقل إلى الخريطة ونعرضه
+                    switchTab('home', document.querySelector('[data-screen="home"]'));
+                    getEl('aiQuery').value = site.name + '، ' + site.city;
+                    askAIAndSpeak();
+                };
+                container.appendChild(card);
+            });
+        }
+
+        // ============================================================
+        // 17. ROBOT CHAT SCREEN
+        // ============================================================
+        let robotInitialized = false;
+
+        function initRobotChat() {
+            if (robotInitialized) return;
+            const chatBox = getEl('chatBox');
+            const t = window._translations || translations[currentLang];
+            // Add greeting if not already
+            if (chatBox.children.length === 0) {
+                const greeting = document.createElement('div');
+                greeting.className = 'chat-msg bot';
+                greeting.innerText = t.robot_greeting;
+                chatBox.appendChild(greeting);
+            }
+            robotInitialized = true;
+        }
+
+        function sendRobotQuery() {
+            const query = getEl('robotQuery').value.trim();
+            if (!query) return;
+            const chatBox = getEl('chatBox');
+            const t = window._translations || translations[currentLang];
+
+            // Add user message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'chat-msg user';
+            userMsg.innerText = query;
+            chatBox.appendChild(userMsg);
+
+            // Clear input
+            getEl('robotQuery').value = '';
+
+            // Find matching site
+            const lowerQuery = query.toLowerCase();
+            let found = null;
+            for (let site of algerianSites) {
+                if (site.name.includes(query) || site.city.includes(query) || query.includes(site.name) || query.includes(site
+                        .city)) {
+                    found = site;
+                    break;
+                }
+            }
+
+            // Bot response
+            const botMsg = document.createElement('div');
+            botMsg.className = 'chat-msg bot';
+            if (found) {
+                botMsg.innerText = t.robot_site_info
+                    .replace('{name}', found.name)
+                    .replace('{city}', found.city)
+                    .replace('{desc}', found.desc)
+                    .replace('{lat}', found.lat)
+                    .replace('{lng}', found.lng);
+                // Also speak
+                speakText(botMsg.innerText);
+            } else {
+                botMsg.innerText = t.robot_unknown;
+                speakText(t.robot_unknown);
+            }
+            chatBox.appendChild(botMsg);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Enter key for robot
+        document.getElementById('robotQuery').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                sendRobotQuery();
+            }
+        });
+
+        // ============================================================
+        // 18. KEYBOARD SUPPORT (others)
+        // ============================================================
+        document.getElementById('aiQuery').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                askAIAndSpeak();
+            }
+        });
+
+        document.getElementById('transInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                translateLive();
+            }
+        });
+
+        // ============================================================
+        // 19. INITIALIZATION
+        // ============================================================
+        applyLanguage('ar');
+        document.getElementById('langSelect').value = 'ar';
+        // Pre-render sites (data is available)
+        renderSites();
+
+        console.log('✅ AI GLOBAL TOURISM V6 loaded successfully.');
+        console.log('ℹ️  Speech synthesis is activated only after user interaction (click).');
+    </script>
+</body>
+</html>
+"""
+
+# ============================================================
 # المسار الرئيسي (الصفحة الرئيسية)
 # ============================================================
 @app.route('/')
 def home():
     """تقديم الواجهة الرئيسية للتطبيق"""
-    return render_template('index.html')
+    # تمرير بيانات المواقع إلى القالب
+    return render_template_string(HTML_TEMPLATE, sites=ALGERIAN_SITES)
 
 # ============================================================
-# API معالجة الذكاء الاصطناعي والملاحة
+# API معالجة الذكاء الاصطناعي (نفس الوظيفة السابقة)
 # ============================================================
 @app.route('/api/ai-process', methods=['POST'])
 def ai_process():
-    """
-    استقبال طلب من العميل (الـ JavaScript) ومعالجة الاستعلام
-    وإرجاع رد نصي مناسب حسب اللغة المختارة.
-    """
     data = request.json or {}
     query = data.get('query', '').strip()
     lang = data.get('lang', 'ar')
@@ -54,8 +1599,7 @@ def ai_process():
     })
 
 # ============================================================
-# تشغيل الخادم (للاستخدام المحلي فقط، لا يُستخدم في Vercel)
+# تشغيل الخادم (للاستخدام المحلي فقط)
 # ============================================================
 if __name__ == '__main__':
-    # عند التشغيل المباشر للملف، يُشغل الخادم على المنفذ 7000
     app.run(host='0.0.0.0', port=7000, debug=True)
